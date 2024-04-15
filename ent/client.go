@@ -727,15 +727,15 @@ func (c *MenuClient) QueryChildren(m *Menu) *MenuQuery {
 	return query
 }
 
-// QueryRoles queries the roles edge of a Menu.
-func (c *MenuClient) QueryRoles(m *Menu) *RoleMenuQuery {
+// QueryRolesMenus queries the roles_menus edge of a Menu.
+func (c *MenuClient) QueryRolesMenus(m *Menu) *RoleMenuQuery {
 	query := (&RoleMenuClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(menu.Table, menu.FieldID, id),
 			sqlgraph.To(role_menu.Table, role_menu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, menu.RolesTable, menu.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, menu.RolesMenusTable, menu.RolesMenusColumn),
 		)
 		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
 		return fromV, nil
@@ -909,15 +909,15 @@ func (c *OrganizationClient) QueryChildren(o *Organization) *OrganizationQuery {
 	return query
 }
 
-// QueryRoles queries the roles edge of a Organization.
-func (c *OrganizationClient) QueryRoles(o *Organization) *RoleOrganizationQuery {
+// QueryRolesOrganizations queries the roles_organizations edge of a Organization.
+func (c *OrganizationClient) QueryRolesOrganizations(o *Organization) *RoleOrganizationQuery {
 	query := (&RoleOrganizationClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := o.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(organization.Table, organization.FieldID, id),
 			sqlgraph.To(role_organization.Table, role_organization.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, organization.RolesTable, organization.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, organization.RolesOrganizationsTable, organization.RolesOrganizationsColumn),
 		)
 		fromV = sqlgraph.Neighbors(o.driver.Dialect(), step)
 		return fromV, nil
@@ -1075,15 +1075,15 @@ func (c *PositionClient) GetX(ctx context.Context, id string) *Position {
 	return obj
 }
 
-// QueryStaffs queries the staffs edge of a Position.
-func (c *PositionClient) QueryStaffs(po *Position) *StaffPositionQuery {
+// QueryStaffsPositions queries the staffs_positions edge of a Position.
+func (c *PositionClient) QueryStaffsPositions(po *Position) *StaffPositionQuery {
 	query := (&StaffPositionClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := po.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(position.Table, position.FieldID, id),
 			sqlgraph.To(staff_position.Table, staff_position.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, position.StaffsTable, position.StaffsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, position.StaffsPositionsTable, position.StaffsPositionsColumn),
 		)
 		fromV = sqlgraph.Neighbors(po.driver.Dialect(), step)
 		return fromV, nil
@@ -1225,15 +1225,15 @@ func (c *RoleClient) GetX(ctx context.Context, id string) *Role {
 	return obj
 }
 
-// QueryMenus queries the menus edge of a Role.
-func (c *RoleClient) QueryMenus(r *Role) *RoleMenuQuery {
+// QueryRolesMenus queries the roles_menus edge of a Role.
+func (c *RoleClient) QueryRolesMenus(r *Role) *RoleMenuQuery {
 	query := (&RoleMenuClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(role_menu.Table, role_menu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.MenusTable, role.MenusColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.RolesMenusTable, role.RolesMenusColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1241,15 +1241,15 @@ func (c *RoleClient) QueryMenus(r *Role) *RoleMenuQuery {
 	return query
 }
 
-// QueryOrganizations queries the organizations edge of a Role.
-func (c *RoleClient) QueryOrganizations(r *Role) *RoleOrganizationQuery {
+// QueryRolesOrganizations queries the roles_organizations edge of a Role.
+func (c *RoleClient) QueryRolesOrganizations(r *Role) *RoleOrganizationQuery {
 	query := (&RoleOrganizationClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(role_organization.Table, role_organization.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.OrganizationsTable, role.OrganizationsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.RolesOrganizationsTable, role.RolesOrganizationsColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1257,15 +1257,15 @@ func (c *RoleClient) QueryOrganizations(r *Role) *RoleOrganizationQuery {
 	return query
 }
 
-// QueryStaffs queries the staffs edge of a Role.
-func (c *RoleClient) QueryStaffs(r *Role) *StaffRoleQuery {
+// QueryStaffsRoles queries the staffs_roles edge of a Role.
+func (c *RoleClient) QueryStaffsRoles(r *Role) *StaffRoleQuery {
 	query := (&StaffRoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(staff_role.Table, staff_role.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.StaffsTable, role.StaffsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.StaffsRolesTable, role.StaffsRolesColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1755,15 +1755,15 @@ func (c *StaffClient) QueryOrganization(s *Staff) *OrganizationQuery {
 	return query
 }
 
-// QueryRoles queries the roles edge of a Staff.
-func (c *StaffClient) QueryRoles(s *Staff) *StaffRoleQuery {
+// QueryStaffsRoles queries the staffs_roles edge of a Staff.
+func (c *StaffClient) QueryStaffsRoles(s *Staff) *StaffRoleQuery {
 	query := (&StaffRoleClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(staff.Table, staff.FieldID, id),
 			sqlgraph.To(staff_role.Table, staff_role.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, staff.RolesTable, staff.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, staff.StaffsRolesTable, staff.StaffsRolesColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
@@ -1771,15 +1771,15 @@ func (c *StaffClient) QueryRoles(s *Staff) *StaffRoleQuery {
 	return query
 }
 
-// QueryPositions queries the positions edge of a Staff.
-func (c *StaffClient) QueryPositions(s *Staff) *StaffPositionQuery {
+// QueryStaffsPositions queries the staffs_positions edge of a Staff.
+func (c *StaffClient) QueryStaffsPositions(s *Staff) *StaffPositionQuery {
 	query := (&StaffPositionClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := s.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(staff.Table, staff.FieldID, id),
 			sqlgraph.To(staff_position.Table, staff_position.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, staff.PositionsTable, staff.PositionsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, staff.StaffsPositionsTable, staff.StaffsPositionsColumn),
 		)
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil

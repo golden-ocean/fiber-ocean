@@ -5,11 +5,11 @@ import (
 )
 
 func InitRoutes(route fiber.Router) {
-	handler := NewHandler()
+	h := NewHandler()
 	r := route.Group("organizations")
 
-	r.Post("/", handler.Create)
-	r.Put("/", handler.Update)
-	r.Delete("/", handler.Delete)
-	r.Get("/tree", handler.QueryTree)
+	r.Post("/", h.Create)
+	r.Put("/", h.Update)
+	r.Delete("/", h.Delete)
+	r.Get("/tree", h.QueryTree)
 }

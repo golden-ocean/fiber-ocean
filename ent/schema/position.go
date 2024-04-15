@@ -30,7 +30,7 @@ func (Position) Fields() []ent.Field {
 
 func (Position) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("staffs", Staff_Position.Type),
+		edge.To("staffs_positions", Staff_Position.Type),
 	}
 }
 

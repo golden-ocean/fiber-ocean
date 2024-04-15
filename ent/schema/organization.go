@@ -34,7 +34,7 @@ func (Organization) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("children", Organization.Type).
 			From("parent").Unique().Field("parent_id"),
-		edge.To("roles", Role_Organization.Type),
+		edge.To("roles_organizations", Role_Organization.Type),
 		edge.From("staffs", Staff.Type).Ref("organization"),
 	}
 }

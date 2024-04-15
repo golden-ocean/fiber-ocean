@@ -205,19 +205,19 @@ func (ou *OrganizationUpdate) AddChildren(o ...*Organization) *OrganizationUpdat
 	return ou.AddChildIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role_Organization entity by IDs.
-func (ou *OrganizationUpdate) AddRoleIDs(ids ...string) *OrganizationUpdate {
-	ou.mutation.AddRoleIDs(ids...)
+// AddRolesOrganizationIDs adds the "roles_organizations" edge to the Role_Organization entity by IDs.
+func (ou *OrganizationUpdate) AddRolesOrganizationIDs(ids ...string) *OrganizationUpdate {
+	ou.mutation.AddRolesOrganizationIDs(ids...)
 	return ou
 }
 
-// AddRoles adds the "roles" edges to the Role_Organization entity.
-func (ou *OrganizationUpdate) AddRoles(r ...*Role_Organization) *OrganizationUpdate {
+// AddRolesOrganizations adds the "roles_organizations" edges to the Role_Organization entity.
+func (ou *OrganizationUpdate) AddRolesOrganizations(r ...*Role_Organization) *OrganizationUpdate {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return ou.AddRoleIDs(ids...)
+	return ou.AddRolesOrganizationIDs(ids...)
 }
 
 // AddStaffIDs adds the "staffs" edge to the Staff entity by IDs.
@@ -267,25 +267,25 @@ func (ou *OrganizationUpdate) RemoveChildren(o ...*Organization) *OrganizationUp
 	return ou.RemoveChildIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role_Organization entity.
-func (ou *OrganizationUpdate) ClearRoles() *OrganizationUpdate {
-	ou.mutation.ClearRoles()
+// ClearRolesOrganizations clears all "roles_organizations" edges to the Role_Organization entity.
+func (ou *OrganizationUpdate) ClearRolesOrganizations() *OrganizationUpdate {
+	ou.mutation.ClearRolesOrganizations()
 	return ou
 }
 
-// RemoveRoleIDs removes the "roles" edge to Role_Organization entities by IDs.
-func (ou *OrganizationUpdate) RemoveRoleIDs(ids ...string) *OrganizationUpdate {
-	ou.mutation.RemoveRoleIDs(ids...)
+// RemoveRolesOrganizationIDs removes the "roles_organizations" edge to Role_Organization entities by IDs.
+func (ou *OrganizationUpdate) RemoveRolesOrganizationIDs(ids ...string) *OrganizationUpdate {
+	ou.mutation.RemoveRolesOrganizationIDs(ids...)
 	return ou
 }
 
-// RemoveRoles removes "roles" edges to Role_Organization entities.
-func (ou *OrganizationUpdate) RemoveRoles(r ...*Role_Organization) *OrganizationUpdate {
+// RemoveRolesOrganizations removes "roles_organizations" edges to Role_Organization entities.
+func (ou *OrganizationUpdate) RemoveRolesOrganizations(r ...*Role_Organization) *OrganizationUpdate {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return ou.RemoveRoleIDs(ids...)
+	return ou.RemoveRolesOrganizationIDs(ids...)
 }
 
 // ClearStaffs clears all "staffs" edges to the Staff entity.
@@ -479,12 +479,12 @@ func (ou *OrganizationUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ou.mutation.RolesCleared() {
+	if ou.mutation.RolesOrganizationsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -492,12 +492,12 @@ func (ou *OrganizationUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ou.mutation.RemovedRolesIDs(); len(nodes) > 0 && !ou.mutation.RolesCleared() {
+	if nodes := ou.mutation.RemovedRolesOrganizationsIDs(); len(nodes) > 0 && !ou.mutation.RolesOrganizationsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -508,12 +508,12 @@ func (ou *OrganizationUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ou.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := ou.mutation.RolesOrganizationsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -765,19 +765,19 @@ func (ouo *OrganizationUpdateOne) AddChildren(o ...*Organization) *OrganizationU
 	return ouo.AddChildIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role_Organization entity by IDs.
-func (ouo *OrganizationUpdateOne) AddRoleIDs(ids ...string) *OrganizationUpdateOne {
-	ouo.mutation.AddRoleIDs(ids...)
+// AddRolesOrganizationIDs adds the "roles_organizations" edge to the Role_Organization entity by IDs.
+func (ouo *OrganizationUpdateOne) AddRolesOrganizationIDs(ids ...string) *OrganizationUpdateOne {
+	ouo.mutation.AddRolesOrganizationIDs(ids...)
 	return ouo
 }
 
-// AddRoles adds the "roles" edges to the Role_Organization entity.
-func (ouo *OrganizationUpdateOne) AddRoles(r ...*Role_Organization) *OrganizationUpdateOne {
+// AddRolesOrganizations adds the "roles_organizations" edges to the Role_Organization entity.
+func (ouo *OrganizationUpdateOne) AddRolesOrganizations(r ...*Role_Organization) *OrganizationUpdateOne {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return ouo.AddRoleIDs(ids...)
+	return ouo.AddRolesOrganizationIDs(ids...)
 }
 
 // AddStaffIDs adds the "staffs" edge to the Staff entity by IDs.
@@ -827,25 +827,25 @@ func (ouo *OrganizationUpdateOne) RemoveChildren(o ...*Organization) *Organizati
 	return ouo.RemoveChildIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role_Organization entity.
-func (ouo *OrganizationUpdateOne) ClearRoles() *OrganizationUpdateOne {
-	ouo.mutation.ClearRoles()
+// ClearRolesOrganizations clears all "roles_organizations" edges to the Role_Organization entity.
+func (ouo *OrganizationUpdateOne) ClearRolesOrganizations() *OrganizationUpdateOne {
+	ouo.mutation.ClearRolesOrganizations()
 	return ouo
 }
 
-// RemoveRoleIDs removes the "roles" edge to Role_Organization entities by IDs.
-func (ouo *OrganizationUpdateOne) RemoveRoleIDs(ids ...string) *OrganizationUpdateOne {
-	ouo.mutation.RemoveRoleIDs(ids...)
+// RemoveRolesOrganizationIDs removes the "roles_organizations" edge to Role_Organization entities by IDs.
+func (ouo *OrganizationUpdateOne) RemoveRolesOrganizationIDs(ids ...string) *OrganizationUpdateOne {
+	ouo.mutation.RemoveRolesOrganizationIDs(ids...)
 	return ouo
 }
 
-// RemoveRoles removes "roles" edges to Role_Organization entities.
-func (ouo *OrganizationUpdateOne) RemoveRoles(r ...*Role_Organization) *OrganizationUpdateOne {
+// RemoveRolesOrganizations removes "roles_organizations" edges to Role_Organization entities.
+func (ouo *OrganizationUpdateOne) RemoveRolesOrganizations(r ...*Role_Organization) *OrganizationUpdateOne {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return ouo.RemoveRoleIDs(ids...)
+	return ouo.RemoveRolesOrganizationIDs(ids...)
 }
 
 // ClearStaffs clears all "staffs" edges to the Staff entity.
@@ -1069,12 +1069,12 @@ func (ouo *OrganizationUpdateOne) sqlSave(ctx context.Context) (_node *Organizat
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ouo.mutation.RolesCleared() {
+	if ouo.mutation.RolesOrganizationsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -1082,12 +1082,12 @@ func (ouo *OrganizationUpdateOne) sqlSave(ctx context.Context) (_node *Organizat
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ouo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !ouo.mutation.RolesCleared() {
+	if nodes := ouo.mutation.RemovedRolesOrganizationsIDs(); len(nodes) > 0 && !ouo.mutation.RolesOrganizationsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -1098,12 +1098,12 @@ func (ouo *OrganizationUpdateOne) sqlSave(ctx context.Context) (_node *Organizat
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ouo.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := ouo.mutation.RolesOrganizationsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   organization.RolesTable,
-			Columns: []string{organization.RolesColumn},
+			Table:   organization.RolesOrganizationsTable,
+			Columns: []string{organization.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),

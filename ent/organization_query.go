@@ -20,14 +20,14 @@ import (
 // OrganizationQuery is the builder for querying Organization entities.
 type OrganizationQuery struct {
 	config
-	ctx          *QueryContext
-	order        []organization.OrderOption
-	inters       []Interceptor
-	predicates   []predicate.Organization
-	withParent   *OrganizationQuery
-	withChildren *OrganizationQuery
-	withRoles    *RoleOrganizationQuery
-	withStaffs   *StaffQuery
+	ctx                    *QueryContext
+	order                  []organization.OrderOption
+	inters                 []Interceptor
+	predicates             []predicate.Organization
+	withParent             *OrganizationQuery
+	withChildren           *OrganizationQuery
+	withRolesOrganizations *RoleOrganizationQuery
+	withStaffs             *StaffQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -108,8 +108,8 @@ func (oq *OrganizationQuery) QueryChildren() *OrganizationQuery {
 	return query
 }
 
-// QueryRoles chains the current query on the "roles" edge.
-func (oq *OrganizationQuery) QueryRoles() *RoleOrganizationQuery {
+// QueryRolesOrganizations chains the current query on the "roles_organizations" edge.
+func (oq *OrganizationQuery) QueryRolesOrganizations() *RoleOrganizationQuery {
 	query := (&RoleOrganizationClient{config: oq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := oq.prepareQuery(ctx); err != nil {
@@ -122,7 +122,7 @@ func (oq *OrganizationQuery) QueryRoles() *RoleOrganizationQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(organization.Table, organization.FieldID, selector),
 			sqlgraph.To(role_organization.Table, role_organization.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, organization.RolesTable, organization.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, organization.RolesOrganizationsTable, organization.RolesOrganizationsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(oq.driver.Dialect(), step)
 		return fromU, nil
@@ -339,15 +339,15 @@ func (oq *OrganizationQuery) Clone() *OrganizationQuery {
 		return nil
 	}
 	return &OrganizationQuery{
-		config:       oq.config,
-		ctx:          oq.ctx.Clone(),
-		order:        append([]organization.OrderOption{}, oq.order...),
-		inters:       append([]Interceptor{}, oq.inters...),
-		predicates:   append([]predicate.Organization{}, oq.predicates...),
-		withParent:   oq.withParent.Clone(),
-		withChildren: oq.withChildren.Clone(),
-		withRoles:    oq.withRoles.Clone(),
-		withStaffs:   oq.withStaffs.Clone(),
+		config:                 oq.config,
+		ctx:                    oq.ctx.Clone(),
+		order:                  append([]organization.OrderOption{}, oq.order...),
+		inters:                 append([]Interceptor{}, oq.inters...),
+		predicates:             append([]predicate.Organization{}, oq.predicates...),
+		withParent:             oq.withParent.Clone(),
+		withChildren:           oq.withChildren.Clone(),
+		withRolesOrganizations: oq.withRolesOrganizations.Clone(),
+		withStaffs:             oq.withStaffs.Clone(),
 		// clone intermediate query.
 		sql:  oq.sql.Clone(),
 		path: oq.path,
@@ -376,14 +376,14 @@ func (oq *OrganizationQuery) WithChildren(opts ...func(*OrganizationQuery)) *Org
 	return oq
 }
 
-// WithRoles tells the query-builder to eager-load the nodes that are connected to
-// the "roles" edge. The optional arguments are used to configure the query builder of the edge.
-func (oq *OrganizationQuery) WithRoles(opts ...func(*RoleOrganizationQuery)) *OrganizationQuery {
+// WithRolesOrganizations tells the query-builder to eager-load the nodes that are connected to
+// the "roles_organizations" edge. The optional arguments are used to configure the query builder of the edge.
+func (oq *OrganizationQuery) WithRolesOrganizations(opts ...func(*RoleOrganizationQuery)) *OrganizationQuery {
 	query := (&RoleOrganizationClient{config: oq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	oq.withRoles = query
+	oq.withRolesOrganizations = query
 	return oq
 }
 
@@ -479,7 +479,7 @@ func (oq *OrganizationQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 		loadedTypes = [4]bool{
 			oq.withParent != nil,
 			oq.withChildren != nil,
-			oq.withRoles != nil,
+			oq.withRolesOrganizations != nil,
 			oq.withStaffs != nil,
 		}
 	)
@@ -514,10 +514,12 @@ func (oq *OrganizationQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 			return nil, err
 		}
 	}
-	if query := oq.withRoles; query != nil {
-		if err := oq.loadRoles(ctx, query, nodes,
-			func(n *Organization) { n.Edges.Roles = []*Role_Organization{} },
-			func(n *Organization, e *Role_Organization) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+	if query := oq.withRolesOrganizations; query != nil {
+		if err := oq.loadRolesOrganizations(ctx, query, nodes,
+			func(n *Organization) { n.Edges.RolesOrganizations = []*Role_Organization{} },
+			func(n *Organization, e *Role_Organization) {
+				n.Edges.RolesOrganizations = append(n.Edges.RolesOrganizations, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
@@ -590,7 +592,7 @@ func (oq *OrganizationQuery) loadChildren(ctx context.Context, query *Organizati
 	}
 	return nil
 }
-func (oq *OrganizationQuery) loadRoles(ctx context.Context, query *RoleOrganizationQuery, nodes []*Organization, init func(*Organization), assign func(*Organization, *Role_Organization)) error {
+func (oq *OrganizationQuery) loadRolesOrganizations(ctx context.Context, query *RoleOrganizationQuery, nodes []*Organization, init func(*Organization), assign func(*Organization, *Role_Organization)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Organization)
 	for i := range nodes {
@@ -604,7 +606,7 @@ func (oq *OrganizationQuery) loadRoles(ctx context.Context, query *RoleOrganizat
 		query.ctx.AppendFieldOnce(role_organization.FieldOrganizationID)
 	}
 	query.Where(predicate.Role_Organization(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(organization.RolesColumn), fks...))
+		s.Where(sql.InValues(s.C(organization.RolesOrganizationsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

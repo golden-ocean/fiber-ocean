@@ -43,20 +43,20 @@ type Position struct {
 
 // PositionEdges holds the relations/edges for other nodes in the graph.
 type PositionEdges struct {
-	// Staffs holds the value of the staffs edge.
-	Staffs []*Staff_Position `json:"staffs,omitempty"`
+	// StaffsPositions holds the value of the staffs_positions edge.
+	StaffsPositions []*Staff_Position `json:"staffs_positions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 }
 
-// StaffsOrErr returns the Staffs value or an error if the edge
+// StaffsPositionsOrErr returns the StaffsPositions value or an error if the edge
 // was not loaded in eager-loading.
-func (e PositionEdges) StaffsOrErr() ([]*Staff_Position, error) {
+func (e PositionEdges) StaffsPositionsOrErr() ([]*Staff_Position, error) {
 	if e.loadedTypes[0] {
-		return e.Staffs, nil
+		return e.StaffsPositions, nil
 	}
-	return nil, &NotLoadedError{edge: "staffs"}
+	return nil, &NotLoadedError{edge: "staffs_positions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -156,9 +156,9 @@ func (po *Position) Value(name string) (ent.Value, error) {
 	return po.selectValues.Get(name)
 }
 
-// QueryStaffs queries the "staffs" edge of the Position entity.
-func (po *Position) QueryStaffs() *StaffPositionQuery {
-	return NewPositionClient(po.config).QueryStaffs(po)
+// QueryStaffsPositions queries the "staffs_positions" edge of the Position entity.
+func (po *Position) QueryStaffsPositions() *StaffPositionQuery {
+	return NewPositionClient(po.config).QueryStaffsPositions(po)
 }
 
 // Update returns a builder for updating this Position.

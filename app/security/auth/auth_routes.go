@@ -13,5 +13,6 @@ func InitRoutes(route fiber.Router) {
 	// r.Post("/logout", handler.Logout)
 	r.Get("/info", middlewares.JWTProtected(), handler.QueryInfo)
 	// r.Post("/refresh", middlewares.JWTProtected(), handler.Refresh)
+	r.Get("/test", handler.Test)
 
 }

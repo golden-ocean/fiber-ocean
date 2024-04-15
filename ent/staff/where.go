@@ -1221,21 +1221,21 @@ func HasOrganizationWith(preds ...predicate.Organization) predicate.Staff {
 	})
 }
 
-// HasRoles applies the HasEdge predicate on the "roles" edge.
-func HasRoles() predicate.Staff {
+// HasStaffsRoles applies the HasEdge predicate on the "staffs_roles" edge.
+func HasStaffsRoles() predicate.Staff {
 	return predicate.Staff(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, RolesTable, RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, StaffsRolesTable, StaffsRolesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasRolesWith applies the HasEdge predicate on the "roles" edge with a given conditions (other predicates).
-func HasRolesWith(preds ...predicate.Staff_Role) predicate.Staff {
+// HasStaffsRolesWith applies the HasEdge predicate on the "staffs_roles" edge with a given conditions (other predicates).
+func HasStaffsRolesWith(preds ...predicate.Staff_Role) predicate.Staff {
 	return predicate.Staff(func(s *sql.Selector) {
-		step := newRolesStep()
+		step := newStaffsRolesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -1244,21 +1244,21 @@ func HasRolesWith(preds ...predicate.Staff_Role) predicate.Staff {
 	})
 }
 
-// HasPositions applies the HasEdge predicate on the "positions" edge.
-func HasPositions() predicate.Staff {
+// HasStaffsPositions applies the HasEdge predicate on the "staffs_positions" edge.
+func HasStaffsPositions() predicate.Staff {
 	return predicate.Staff(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, PositionsTable, PositionsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, StaffsPositionsTable, StaffsPositionsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasPositionsWith applies the HasEdge predicate on the "positions" edge with a given conditions (other predicates).
-func HasPositionsWith(preds ...predicate.Staff_Position) predicate.Staff {
+// HasStaffsPositionsWith applies the HasEdge predicate on the "staffs_positions" edge with a given conditions (other predicates).
+func HasStaffsPositionsWith(preds ...predicate.Staff_Position) predicate.Staff {
 	return predicate.Staff(func(s *sql.Selector) {
-		step := newPositionsStep()
+		step := newStaffsPositionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -164,19 +164,19 @@ func (pu *PositionUpdate) SetNillableCode(s *string) *PositionUpdate {
 	return pu
 }
 
-// AddStaffIDs adds the "staffs" edge to the Staff_Position entity by IDs.
-func (pu *PositionUpdate) AddStaffIDs(ids ...string) *PositionUpdate {
-	pu.mutation.AddStaffIDs(ids...)
+// AddStaffsPositionIDs adds the "staffs_positions" edge to the Staff_Position entity by IDs.
+func (pu *PositionUpdate) AddStaffsPositionIDs(ids ...string) *PositionUpdate {
+	pu.mutation.AddStaffsPositionIDs(ids...)
 	return pu
 }
 
-// AddStaffs adds the "staffs" edges to the Staff_Position entity.
-func (pu *PositionUpdate) AddStaffs(s ...*Staff_Position) *PositionUpdate {
+// AddStaffsPositions adds the "staffs_positions" edges to the Staff_Position entity.
+func (pu *PositionUpdate) AddStaffsPositions(s ...*Staff_Position) *PositionUpdate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return pu.AddStaffIDs(ids...)
+	return pu.AddStaffsPositionIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
@@ -184,25 +184,25 @@ func (pu *PositionUpdate) Mutation() *PositionMutation {
 	return pu.mutation
 }
 
-// ClearStaffs clears all "staffs" edges to the Staff_Position entity.
-func (pu *PositionUpdate) ClearStaffs() *PositionUpdate {
-	pu.mutation.ClearStaffs()
+// ClearStaffsPositions clears all "staffs_positions" edges to the Staff_Position entity.
+func (pu *PositionUpdate) ClearStaffsPositions() *PositionUpdate {
+	pu.mutation.ClearStaffsPositions()
 	return pu
 }
 
-// RemoveStaffIDs removes the "staffs" edge to Staff_Position entities by IDs.
-func (pu *PositionUpdate) RemoveStaffIDs(ids ...string) *PositionUpdate {
-	pu.mutation.RemoveStaffIDs(ids...)
+// RemoveStaffsPositionIDs removes the "staffs_positions" edge to Staff_Position entities by IDs.
+func (pu *PositionUpdate) RemoveStaffsPositionIDs(ids ...string) *PositionUpdate {
+	pu.mutation.RemoveStaffsPositionIDs(ids...)
 	return pu
 }
 
-// RemoveStaffs removes "staffs" edges to Staff_Position entities.
-func (pu *PositionUpdate) RemoveStaffs(s ...*Staff_Position) *PositionUpdate {
+// RemoveStaffsPositions removes "staffs_positions" edges to Staff_Position entities.
+func (pu *PositionUpdate) RemoveStaffsPositions(s ...*Staff_Position) *PositionUpdate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return pu.RemoveStaffIDs(ids...)
+	return pu.RemoveStaffsPositionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -301,12 +301,12 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.Code(); ok {
 		_spec.SetField(position.FieldCode, field.TypeString, value)
 	}
-	if pu.mutation.StaffsCleared() {
+	if pu.mutation.StaffsPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),
@@ -314,12 +314,12 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.RemovedStaffsIDs(); len(nodes) > 0 && !pu.mutation.StaffsCleared() {
+	if nodes := pu.mutation.RemovedStaffsPositionsIDs(); len(nodes) > 0 && !pu.mutation.StaffsPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),
@@ -330,12 +330,12 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.StaffsIDs(); len(nodes) > 0 {
+	if nodes := pu.mutation.StaffsPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),
@@ -502,19 +502,19 @@ func (puo *PositionUpdateOne) SetNillableCode(s *string) *PositionUpdateOne {
 	return puo
 }
 
-// AddStaffIDs adds the "staffs" edge to the Staff_Position entity by IDs.
-func (puo *PositionUpdateOne) AddStaffIDs(ids ...string) *PositionUpdateOne {
-	puo.mutation.AddStaffIDs(ids...)
+// AddStaffsPositionIDs adds the "staffs_positions" edge to the Staff_Position entity by IDs.
+func (puo *PositionUpdateOne) AddStaffsPositionIDs(ids ...string) *PositionUpdateOne {
+	puo.mutation.AddStaffsPositionIDs(ids...)
 	return puo
 }
 
-// AddStaffs adds the "staffs" edges to the Staff_Position entity.
-func (puo *PositionUpdateOne) AddStaffs(s ...*Staff_Position) *PositionUpdateOne {
+// AddStaffsPositions adds the "staffs_positions" edges to the Staff_Position entity.
+func (puo *PositionUpdateOne) AddStaffsPositions(s ...*Staff_Position) *PositionUpdateOne {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return puo.AddStaffIDs(ids...)
+	return puo.AddStaffsPositionIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
@@ -522,25 +522,25 @@ func (puo *PositionUpdateOne) Mutation() *PositionMutation {
 	return puo.mutation
 }
 
-// ClearStaffs clears all "staffs" edges to the Staff_Position entity.
-func (puo *PositionUpdateOne) ClearStaffs() *PositionUpdateOne {
-	puo.mutation.ClearStaffs()
+// ClearStaffsPositions clears all "staffs_positions" edges to the Staff_Position entity.
+func (puo *PositionUpdateOne) ClearStaffsPositions() *PositionUpdateOne {
+	puo.mutation.ClearStaffsPositions()
 	return puo
 }
 
-// RemoveStaffIDs removes the "staffs" edge to Staff_Position entities by IDs.
-func (puo *PositionUpdateOne) RemoveStaffIDs(ids ...string) *PositionUpdateOne {
-	puo.mutation.RemoveStaffIDs(ids...)
+// RemoveStaffsPositionIDs removes the "staffs_positions" edge to Staff_Position entities by IDs.
+func (puo *PositionUpdateOne) RemoveStaffsPositionIDs(ids ...string) *PositionUpdateOne {
+	puo.mutation.RemoveStaffsPositionIDs(ids...)
 	return puo
 }
 
-// RemoveStaffs removes "staffs" edges to Staff_Position entities.
-func (puo *PositionUpdateOne) RemoveStaffs(s ...*Staff_Position) *PositionUpdateOne {
+// RemoveStaffsPositions removes "staffs_positions" edges to Staff_Position entities.
+func (puo *PositionUpdateOne) RemoveStaffsPositions(s ...*Staff_Position) *PositionUpdateOne {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return puo.RemoveStaffIDs(ids...)
+	return puo.RemoveStaffsPositionIDs(ids...)
 }
 
 // Where appends a list predicates to the PositionUpdate builder.
@@ -669,12 +669,12 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 	if value, ok := puo.mutation.Code(); ok {
 		_spec.SetField(position.FieldCode, field.TypeString, value)
 	}
-	if puo.mutation.StaffsCleared() {
+	if puo.mutation.StaffsPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),
@@ -682,12 +682,12 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.RemovedStaffsIDs(); len(nodes) > 0 && !puo.mutation.StaffsCleared() {
+	if nodes := puo.mutation.RemovedStaffsPositionsIDs(); len(nodes) > 0 && !puo.mutation.StaffsPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),
@@ -698,12 +698,12 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.StaffsIDs(); len(nodes) > 0 {
+	if nodes := puo.mutation.StaffsPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),

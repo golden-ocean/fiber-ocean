@@ -47,8 +47,8 @@ type Menu struct {
 	Type string `json:"type,omitempty"`
 	// 请求方法
 	Method string `json:"method,omitempty"`
-	// 是否隐藏
-	Visible bool `json:"visible,omitempty"`
+	// 是否显示
+	Visible string `json:"visible,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuQuery when eager-loading is set.
 	Edges        MenuEdges `json:"-"`
@@ -61,8 +61,8 @@ type MenuEdges struct {
 	Parent *Menu `json:"parent,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*Menu `json:"children,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role_Menu `json:"roles,omitempty"`
+	// RolesMenus holds the value of the roles_menus edge.
+	RolesMenus []*Role_Menu `json:"roles_menus,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
@@ -88,13 +88,13 @@ func (e MenuEdges) ChildrenOrErr() ([]*Menu, error) {
 	return nil, &NotLoadedError{edge: "children"}
 }
 
-// RolesOrErr returns the Roles value or an error if the edge
+// RolesMenusOrErr returns the RolesMenus value or an error if the edge
 // was not loaded in eager-loading.
-func (e MenuEdges) RolesOrErr() ([]*Role_Menu, error) {
+func (e MenuEdges) RolesMenusOrErr() ([]*Role_Menu, error) {
 	if e.loadedTypes[2] {
-		return e.Roles, nil
+		return e.RolesMenus, nil
 	}
-	return nil, &NotLoadedError{edge: "roles"}
+	return nil, &NotLoadedError{edge: "roles_menus"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -102,11 +102,9 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldVisible:
-			values[i] = new(sql.NullBool)
 		case menu.FieldCreatedAt, menu.FieldUpdatedAt, menu.FieldSort:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldCreatedBy, menu.FieldUpdatedBy, menu.FieldStatus, menu.FieldRemark, menu.FieldName, menu.FieldParentID, menu.FieldIcon, menu.FieldPath, menu.FieldPermission, menu.FieldComponent, menu.FieldType, menu.FieldMethod:
+		case menu.FieldID, menu.FieldCreatedBy, menu.FieldUpdatedBy, menu.FieldStatus, menu.FieldRemark, menu.FieldName, menu.FieldParentID, menu.FieldIcon, menu.FieldPath, menu.FieldPermission, menu.FieldComponent, menu.FieldType, menu.FieldMethod, menu.FieldVisible:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -220,10 +218,10 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				m.Method = value.String
 			}
 		case menu.FieldVisible:
-			if value, ok := values[i].(*sql.NullBool); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field visible", values[i])
 			} else if value.Valid {
-				m.Visible = value.Bool
+				m.Visible = value.String
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -248,9 +246,9 @@ func (m *Menu) QueryChildren() *MenuQuery {
 	return NewMenuClient(m.config).QueryChildren(m)
 }
 
-// QueryRoles queries the "roles" edge of the Menu entity.
-func (m *Menu) QueryRoles() *RoleMenuQuery {
-	return NewMenuClient(m.config).QueryRoles(m)
+// QueryRolesMenus queries the "roles_menus" edge of the Menu entity.
+func (m *Menu) QueryRolesMenus() *RoleMenuQuery {
+	return NewMenuClient(m.config).QueryRolesMenus(m)
 }
 
 // Update returns a builder for updating this Menu.
@@ -322,7 +320,7 @@ func (m *Menu) String() string {
 	builder.WriteString(m.Method)
 	builder.WriteString(", ")
 	builder.WriteString("visible=")
-	builder.WriteString(fmt.Sprintf("%v", m.Visible))
+	builder.WriteString(m.Visible)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -5,16 +5,16 @@ import (
 )
 
 func InitRoutes(route fiber.Router) {
-	handler := NewHandler()
+	h := NewHandler()
 	r := route.Group("staffs")
 
-	r.Post("/", handler.Create)
-	r.Put("/", handler.Update)
-	r.Delete("/", handler.Delete)
-	r.Get("/", handler.QueryPage)
-	// r.Post("/roles", handler.AssignRole)
+	r.Post("/", h.Create)
+	r.Put("/", h.Update)
+	r.Delete("/", h.Delete)
+	r.Get("/", h.QueryPage)
+	// r.Post("/roles", h.AssignRole)
 	//r.Get("/info", controller.FindInfo)
-	//staff.Get("/info", handler.Info)
-	//staff.Get("/role/:id", handler.FindRole)
-	//staff.Post("/assign", handler.Assign)
+	//staff.Get("/info", h.Info)
+	//staff.Get("/role/:id", h.FindRole)
+	//staff.Post("/assign", h.Assign)
 }

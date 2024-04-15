@@ -1,7 +1,11 @@
 package auth
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v3"
+	"github.com/golden-ocean/fiber-ocean/app/system/staff"
+	"github.com/golden-ocean/fiber-ocean/pkg/common/global"
 	"github.com/golden-ocean/fiber-ocean/pkg/common/response"
 	"github.com/golden-ocean/fiber-ocean/pkg/utils"
 )
@@ -89,3 +93,13 @@ func (h *Handler) QueryInfo(c fiber.Ctx) error {
 // 	}
 // 	return c.JSON(response.OK(tokens))
 // }
+
+func (h *Handler) Test(c fiber.Ctx) error {
+	j := c.Locals("id").(string)
+	fmt.Println(j)
+	es, err := global.Client.Staff.Query().Select(staff.SelectFields...).WithStaffsPositions().WithStaffsRoles().All(c.Context())
+	if err != nil {
+		return err
+	}
+	return c.JSON(response.OK(es))
+}

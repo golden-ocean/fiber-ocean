@@ -31,8 +31,8 @@ func (Staff_Role) Fields() []ent.Field {
 
 func (Staff_Role) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("staffs", Staff.Type).Field("staff_id").Required().Ref("roles").Unique(),
-		edge.From("roles", Role.Type).Field("role_id").Required().Ref("staffs").Unique(),
+		edge.From("staffs", Staff.Type).Field("staff_id").Required().Ref("staffs_roles").Unique(),
+		edge.From("roles", Role.Type).Field("role_id").Required().Ref("staffs_roles").Unique(),
 	}
 }
 

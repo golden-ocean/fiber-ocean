@@ -49,8 +49,8 @@ const (
 	EdgeParent = "parent"
 	// EdgeChildren holds the string denoting the children edge name in mutations.
 	EdgeChildren = "children"
-	// EdgeRoles holds the string denoting the roles edge name in mutations.
-	EdgeRoles = "roles"
+	// EdgeRolesMenus holds the string denoting the roles_menus edge name in mutations.
+	EdgeRolesMenus = "roles_menus"
 	// Table holds the table name of the menu in the database.
 	Table = "system_menus"
 	// ParentTable is the table that holds the parent relation/edge.
@@ -61,13 +61,13 @@ const (
 	ChildrenTable = "system_menus"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "parent_id"
-	// RolesTable is the table that holds the roles relation/edge.
-	RolesTable = "system_roles_menus"
-	// RolesInverseTable is the table name for the Role_Menu entity.
+	// RolesMenusTable is the table that holds the roles_menus relation/edge.
+	RolesMenusTable = "system_roles_menus"
+	// RolesMenusInverseTable is the table name for the Role_Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "role_menu" package.
-	RolesInverseTable = "system_roles_menus"
-	// RolesColumn is the table column denoting the roles relation/edge.
-	RolesColumn = "menu_id"
+	RolesMenusInverseTable = "system_roles_menus"
+	// RolesMenusColumn is the table column denoting the roles_menus relation/edge.
+	RolesMenusColumn = "menu_id"
 )
 
 // Columns holds all SQL columns for menu fields.
@@ -119,7 +119,7 @@ var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// DefaultVisible holds the default value on creation for the "visible" field.
-	DefaultVisible bool
+	DefaultVisible string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(string) error
 )
@@ -233,17 +233,17 @@ func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByRolesCount orders the results by roles count.
-func ByRolesCount(opts ...sql.OrderTermOption) OrderOption {
+// ByRolesMenusCount orders the results by roles_menus count.
+func ByRolesMenusCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newRolesStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newRolesMenusStep(), opts...)
 	}
 }
 
-// ByRoles orders the results by roles terms.
-func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByRolesMenus orders the results by roles_menus terms.
+func ByRolesMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newRolesMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 func newParentStep() *sqlgraph.Step {
@@ -260,10 +260,10 @@ func newChildrenStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
 	)
 }
-func newRolesStep() *sqlgraph.Step {
+func newRolesMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(RolesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, RolesTable, RolesColumn),
+		sqlgraph.To(RolesMenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RolesMenusTable, RolesMenusColumn),
 	)
 }

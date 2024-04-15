@@ -37,8 +37,8 @@ type UpdateInput struct {
 
 type DeleteInput struct {
 	ID          string   `zh:"唯一标识符" json:"id" validate:"required"`
-	PositionIDs []string `zh:"职位IDs" json:"position_ids" validate:"required"`
-	RoleIDs     []string `zh:"角色IDs" json:"role_ids" validate:"required"`
+	PositionIDs []string `zh:"职位IDs" json:"position_ids" validate:"omitempty"`
+	RoleIDs     []string `zh:"角色IDs" json:"role_ids" validate:"omitempty"`
 }
 
 type WhereParams struct {
@@ -69,16 +69,16 @@ type StaffOutput struct {
 	Status         string   `json:"status"`
 	Sort           int32    `json:"sort"`
 	Remark         string   `json:"remark"`
-	PositionIDs    []string `json:"position_ids"`
-	RoleIDs        []string `json:"role_ids"`
+	PositionIDs    []string `json:"position_ids,omitempty"`
+	RoleIDs        []string `json:"role_ids,omitempty"`
 }
 
 // func (output *StaffOutput) Edges(e ent.StaffEdges) {
-// 	p_ids := lo.Map(e.Positions, func(item *ent.Position, _ int) string {
-// 		return item.ID
+// 	p_ids := lo.Map(e.StaffsPositions, func(item *ent.Staff_Position, _ int) string {
+// 		return item.PositionID
 // 	})
-// 	r_ids := lo.Map(e.Roles, func(item *ent.Role, _ int) string {
-// 		return item.ID
+// 	r_ids := lo.Map(e.StaffsRoles, func(item *ent.Staff_Role, _ int) string {
+// 		return item.RoleID
 // 	})
 // 	output.PositionIDs = p_ids
 // 	output.RoleIDs = r_ids

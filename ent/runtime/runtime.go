@@ -227,7 +227,7 @@ func init() {
 	// menuDescVisible is the schema descriptor for visible field.
 	menuDescVisible := menuFields[8].Descriptor()
 	// menu.DefaultVisible holds the default value on creation for the visible field.
-	menu.DefaultVisible = menuDescVisible.Default.(bool)
+	menu.DefaultVisible = menuDescVisible.Default.(string)
 	// menuDescID is the schema descriptor for id field.
 	menuDescID := menuMixinFields0[0].Descriptor()
 	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.

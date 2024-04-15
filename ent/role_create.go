@@ -138,49 +138,49 @@ func (rc *RoleCreate) SetID(s string) *RoleCreate {
 	return rc
 }
 
-// AddMenuIDs adds the "menus" edge to the Role_Menu entity by IDs.
-func (rc *RoleCreate) AddMenuIDs(ids ...string) *RoleCreate {
-	rc.mutation.AddMenuIDs(ids...)
+// AddRolesMenuIDs adds the "roles_menus" edge to the Role_Menu entity by IDs.
+func (rc *RoleCreate) AddRolesMenuIDs(ids ...string) *RoleCreate {
+	rc.mutation.AddRolesMenuIDs(ids...)
 	return rc
 }
 
-// AddMenus adds the "menus" edges to the Role_Menu entity.
-func (rc *RoleCreate) AddMenus(r ...*Role_Menu) *RoleCreate {
+// AddRolesMenus adds the "roles_menus" edges to the Role_Menu entity.
+func (rc *RoleCreate) AddRolesMenus(r ...*Role_Menu) *RoleCreate {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return rc.AddMenuIDs(ids...)
+	return rc.AddRolesMenuIDs(ids...)
 }
 
-// AddOrganizationIDs adds the "organizations" edge to the Role_Organization entity by IDs.
-func (rc *RoleCreate) AddOrganizationIDs(ids ...string) *RoleCreate {
-	rc.mutation.AddOrganizationIDs(ids...)
+// AddRolesOrganizationIDs adds the "roles_organizations" edge to the Role_Organization entity by IDs.
+func (rc *RoleCreate) AddRolesOrganizationIDs(ids ...string) *RoleCreate {
+	rc.mutation.AddRolesOrganizationIDs(ids...)
 	return rc
 }
 
-// AddOrganizations adds the "organizations" edges to the Role_Organization entity.
-func (rc *RoleCreate) AddOrganizations(r ...*Role_Organization) *RoleCreate {
+// AddRolesOrganizations adds the "roles_organizations" edges to the Role_Organization entity.
+func (rc *RoleCreate) AddRolesOrganizations(r ...*Role_Organization) *RoleCreate {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return rc.AddOrganizationIDs(ids...)
+	return rc.AddRolesOrganizationIDs(ids...)
 }
 
-// AddStaffIDs adds the "staffs" edge to the Staff_Role entity by IDs.
-func (rc *RoleCreate) AddStaffIDs(ids ...string) *RoleCreate {
-	rc.mutation.AddStaffIDs(ids...)
+// AddStaffsRoleIDs adds the "staffs_roles" edge to the Staff_Role entity by IDs.
+func (rc *RoleCreate) AddStaffsRoleIDs(ids ...string) *RoleCreate {
+	rc.mutation.AddStaffsRoleIDs(ids...)
 	return rc
 }
 
-// AddStaffs adds the "staffs" edges to the Staff_Role entity.
-func (rc *RoleCreate) AddStaffs(s ...*Staff_Role) *RoleCreate {
+// AddStaffsRoles adds the "staffs_roles" edges to the Staff_Role entity.
+func (rc *RoleCreate) AddStaffsRoles(s ...*Staff_Role) *RoleCreate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return rc.AddStaffIDs(ids...)
+	return rc.AddStaffsRoleIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -345,12 +345,12 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldCode, field.TypeString, value)
 		_node.Code = value
 	}
-	if nodes := rc.mutation.MenusIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.RolesMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   role.MenusTable,
-			Columns: []string{role.MenusColumn},
+			Table:   role.RolesMenusTable,
+			Columns: []string{role.RolesMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_menu.FieldID, field.TypeString),
@@ -361,12 +361,12 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.OrganizationsIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.RolesOrganizationsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   role.OrganizationsTable,
-			Columns: []string{role.OrganizationsColumn},
+			Table:   role.RolesOrganizationsTable,
+			Columns: []string{role.RolesOrganizationsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_organization.FieldID, field.TypeString),
@@ -377,12 +377,12 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.StaffsIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.StaffsRolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   role.StaffsTable,
-			Columns: []string{role.StaffsColumn},
+			Table:   role.StaffsRolesTable,
+			Columns: []string{role.StaffsRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_role.FieldID, field.TypeString),

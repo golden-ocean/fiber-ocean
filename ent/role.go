@@ -43,42 +43,42 @@ type Role struct {
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
 type RoleEdges struct {
-	// Menus holds the value of the menus edge.
-	Menus []*Role_Menu `json:"menus,omitempty"`
-	// Organizations holds the value of the organizations edge.
-	Organizations []*Role_Organization `json:"organizations,omitempty"`
-	// Staffs holds the value of the staffs edge.
-	Staffs []*Staff_Role `json:"staffs,omitempty"`
+	// RolesMenus holds the value of the roles_menus edge.
+	RolesMenus []*Role_Menu `json:"roles_menus,omitempty"`
+	// RolesOrganizations holds the value of the roles_organizations edge.
+	RolesOrganizations []*Role_Organization `json:"roles_organizations,omitempty"`
+	// StaffsRoles holds the value of the staffs_roles edge.
+	StaffsRoles []*Staff_Role `json:"staffs_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
 }
 
-// MenusOrErr returns the Menus value or an error if the edge
+// RolesMenusOrErr returns the RolesMenus value or an error if the edge
 // was not loaded in eager-loading.
-func (e RoleEdges) MenusOrErr() ([]*Role_Menu, error) {
+func (e RoleEdges) RolesMenusOrErr() ([]*Role_Menu, error) {
 	if e.loadedTypes[0] {
-		return e.Menus, nil
+		return e.RolesMenus, nil
 	}
-	return nil, &NotLoadedError{edge: "menus"}
+	return nil, &NotLoadedError{edge: "roles_menus"}
 }
 
-// OrganizationsOrErr returns the Organizations value or an error if the edge
+// RolesOrganizationsOrErr returns the RolesOrganizations value or an error if the edge
 // was not loaded in eager-loading.
-func (e RoleEdges) OrganizationsOrErr() ([]*Role_Organization, error) {
+func (e RoleEdges) RolesOrganizationsOrErr() ([]*Role_Organization, error) {
 	if e.loadedTypes[1] {
-		return e.Organizations, nil
+		return e.RolesOrganizations, nil
 	}
-	return nil, &NotLoadedError{edge: "organizations"}
+	return nil, &NotLoadedError{edge: "roles_organizations"}
 }
 
-// StaffsOrErr returns the Staffs value or an error if the edge
+// StaffsRolesOrErr returns the StaffsRoles value or an error if the edge
 // was not loaded in eager-loading.
-func (e RoleEdges) StaffsOrErr() ([]*Staff_Role, error) {
+func (e RoleEdges) StaffsRolesOrErr() ([]*Staff_Role, error) {
 	if e.loadedTypes[2] {
-		return e.Staffs, nil
+		return e.StaffsRoles, nil
 	}
-	return nil, &NotLoadedError{edge: "staffs"}
+	return nil, &NotLoadedError{edge: "staffs_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -178,19 +178,19 @@ func (r *Role) Value(name string) (ent.Value, error) {
 	return r.selectValues.Get(name)
 }
 
-// QueryMenus queries the "menus" edge of the Role entity.
-func (r *Role) QueryMenus() *RoleMenuQuery {
-	return NewRoleClient(r.config).QueryMenus(r)
+// QueryRolesMenus queries the "roles_menus" edge of the Role entity.
+func (r *Role) QueryRolesMenus() *RoleMenuQuery {
+	return NewRoleClient(r.config).QueryRolesMenus(r)
 }
 
-// QueryOrganizations queries the "organizations" edge of the Role entity.
-func (r *Role) QueryOrganizations() *RoleOrganizationQuery {
-	return NewRoleClient(r.config).QueryOrganizations(r)
+// QueryRolesOrganizations queries the "roles_organizations" edge of the Role entity.
+func (r *Role) QueryRolesOrganizations() *RoleOrganizationQuery {
+	return NewRoleClient(r.config).QueryRolesOrganizations(r)
 }
 
-// QueryStaffs queries the "staffs" edge of the Role entity.
-func (r *Role) QueryStaffs() *StaffRoleQuery {
-	return NewRoleClient(r.config).QueryStaffs(r)
+// QueryStaffsRoles queries the "staffs_roles" edge of the Role entity.
+func (r *Role) QueryStaffsRoles() *StaffRoleQuery {
+	return NewRoleClient(r.config).QueryStaffsRoles(r)
 }
 
 // Update returns a builder for updating this Role.

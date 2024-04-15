@@ -21,13 +21,13 @@ import (
 // StaffQuery is the builder for querying Staff entities.
 type StaffQuery struct {
 	config
-	ctx              *QueryContext
-	order            []staff.OrderOption
-	inters           []Interceptor
-	predicates       []predicate.Staff
-	withOrganization *OrganizationQuery
-	withRoles        *StaffRoleQuery
-	withPositions    *StaffPositionQuery
+	ctx                 *QueryContext
+	order               []staff.OrderOption
+	inters              []Interceptor
+	predicates          []predicate.Staff
+	withOrganization    *OrganizationQuery
+	withStaffsRoles     *StaffRoleQuery
+	withStaffsPositions *StaffPositionQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -86,8 +86,8 @@ func (sq *StaffQuery) QueryOrganization() *OrganizationQuery {
 	return query
 }
 
-// QueryRoles chains the current query on the "roles" edge.
-func (sq *StaffQuery) QueryRoles() *StaffRoleQuery {
+// QueryStaffsRoles chains the current query on the "staffs_roles" edge.
+func (sq *StaffQuery) QueryStaffsRoles() *StaffRoleQuery {
 	query := (&StaffRoleClient{config: sq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
@@ -100,7 +100,7 @@ func (sq *StaffQuery) QueryRoles() *StaffRoleQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(staff.Table, staff.FieldID, selector),
 			sqlgraph.To(staff_role.Table, staff_role.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, staff.RolesTable, staff.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, staff.StaffsRolesTable, staff.StaffsRolesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -108,8 +108,8 @@ func (sq *StaffQuery) QueryRoles() *StaffRoleQuery {
 	return query
 }
 
-// QueryPositions chains the current query on the "positions" edge.
-func (sq *StaffQuery) QueryPositions() *StaffPositionQuery {
+// QueryStaffsPositions chains the current query on the "staffs_positions" edge.
+func (sq *StaffQuery) QueryStaffsPositions() *StaffPositionQuery {
 	query := (&StaffPositionClient{config: sq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := sq.prepareQuery(ctx); err != nil {
@@ -122,7 +122,7 @@ func (sq *StaffQuery) QueryPositions() *StaffPositionQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(staff.Table, staff.FieldID, selector),
 			sqlgraph.To(staff_position.Table, staff_position.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, staff.PositionsTable, staff.PositionsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, staff.StaffsPositionsTable, staff.StaffsPositionsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
@@ -317,14 +317,14 @@ func (sq *StaffQuery) Clone() *StaffQuery {
 		return nil
 	}
 	return &StaffQuery{
-		config:           sq.config,
-		ctx:              sq.ctx.Clone(),
-		order:            append([]staff.OrderOption{}, sq.order...),
-		inters:           append([]Interceptor{}, sq.inters...),
-		predicates:       append([]predicate.Staff{}, sq.predicates...),
-		withOrganization: sq.withOrganization.Clone(),
-		withRoles:        sq.withRoles.Clone(),
-		withPositions:    sq.withPositions.Clone(),
+		config:              sq.config,
+		ctx:                 sq.ctx.Clone(),
+		order:               append([]staff.OrderOption{}, sq.order...),
+		inters:              append([]Interceptor{}, sq.inters...),
+		predicates:          append([]predicate.Staff{}, sq.predicates...),
+		withOrganization:    sq.withOrganization.Clone(),
+		withStaffsRoles:     sq.withStaffsRoles.Clone(),
+		withStaffsPositions: sq.withStaffsPositions.Clone(),
 		// clone intermediate query.
 		sql:  sq.sql.Clone(),
 		path: sq.path,
@@ -342,25 +342,25 @@ func (sq *StaffQuery) WithOrganization(opts ...func(*OrganizationQuery)) *StaffQ
 	return sq
 }
 
-// WithRoles tells the query-builder to eager-load the nodes that are connected to
-// the "roles" edge. The optional arguments are used to configure the query builder of the edge.
-func (sq *StaffQuery) WithRoles(opts ...func(*StaffRoleQuery)) *StaffQuery {
+// WithStaffsRoles tells the query-builder to eager-load the nodes that are connected to
+// the "staffs_roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (sq *StaffQuery) WithStaffsRoles(opts ...func(*StaffRoleQuery)) *StaffQuery {
 	query := (&StaffRoleClient{config: sq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	sq.withRoles = query
+	sq.withStaffsRoles = query
 	return sq
 }
 
-// WithPositions tells the query-builder to eager-load the nodes that are connected to
-// the "positions" edge. The optional arguments are used to configure the query builder of the edge.
-func (sq *StaffQuery) WithPositions(opts ...func(*StaffPositionQuery)) *StaffQuery {
+// WithStaffsPositions tells the query-builder to eager-load the nodes that are connected to
+// the "staffs_positions" edge. The optional arguments are used to configure the query builder of the edge.
+func (sq *StaffQuery) WithStaffsPositions(opts ...func(*StaffPositionQuery)) *StaffQuery {
 	query := (&StaffPositionClient{config: sq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	sq.withPositions = query
+	sq.withStaffsPositions = query
 	return sq
 }
 
@@ -444,8 +444,8 @@ func (sq *StaffQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Staff,
 		_spec       = sq.querySpec()
 		loadedTypes = [3]bool{
 			sq.withOrganization != nil,
-			sq.withRoles != nil,
-			sq.withPositions != nil,
+			sq.withStaffsRoles != nil,
+			sq.withStaffsPositions != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -472,17 +472,17 @@ func (sq *StaffQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Staff,
 			return nil, err
 		}
 	}
-	if query := sq.withRoles; query != nil {
-		if err := sq.loadRoles(ctx, query, nodes,
-			func(n *Staff) { n.Edges.Roles = []*Staff_Role{} },
-			func(n *Staff, e *Staff_Role) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+	if query := sq.withStaffsRoles; query != nil {
+		if err := sq.loadStaffsRoles(ctx, query, nodes,
+			func(n *Staff) { n.Edges.StaffsRoles = []*Staff_Role{} },
+			func(n *Staff, e *Staff_Role) { n.Edges.StaffsRoles = append(n.Edges.StaffsRoles, e) }); err != nil {
 			return nil, err
 		}
 	}
-	if query := sq.withPositions; query != nil {
-		if err := sq.loadPositions(ctx, query, nodes,
-			func(n *Staff) { n.Edges.Positions = []*Staff_Position{} },
-			func(n *Staff, e *Staff_Position) { n.Edges.Positions = append(n.Edges.Positions, e) }); err != nil {
+	if query := sq.withStaffsPositions; query != nil {
+		if err := sq.loadStaffsPositions(ctx, query, nodes,
+			func(n *Staff) { n.Edges.StaffsPositions = []*Staff_Position{} },
+			func(n *Staff, e *Staff_Position) { n.Edges.StaffsPositions = append(n.Edges.StaffsPositions, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -518,7 +518,7 @@ func (sq *StaffQuery) loadOrganization(ctx context.Context, query *OrganizationQ
 	}
 	return nil
 }
-func (sq *StaffQuery) loadRoles(ctx context.Context, query *StaffRoleQuery, nodes []*Staff, init func(*Staff), assign func(*Staff, *Staff_Role)) error {
+func (sq *StaffQuery) loadStaffsRoles(ctx context.Context, query *StaffRoleQuery, nodes []*Staff, init func(*Staff), assign func(*Staff, *Staff_Role)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Staff)
 	for i := range nodes {
@@ -532,7 +532,7 @@ func (sq *StaffQuery) loadRoles(ctx context.Context, query *StaffRoleQuery, node
 		query.ctx.AppendFieldOnce(staff_role.FieldStaffID)
 	}
 	query.Where(predicate.Staff_Role(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(staff.RolesColumn), fks...))
+		s.Where(sql.InValues(s.C(staff.StaffsRolesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -548,7 +548,7 @@ func (sq *StaffQuery) loadRoles(ctx context.Context, query *StaffRoleQuery, node
 	}
 	return nil
 }
-func (sq *StaffQuery) loadPositions(ctx context.Context, query *StaffPositionQuery, nodes []*Staff, init func(*Staff), assign func(*Staff, *Staff_Position)) error {
+func (sq *StaffQuery) loadStaffsPositions(ctx context.Context, query *StaffPositionQuery, nodes []*Staff, init func(*Staff), assign func(*Staff, *Staff_Position)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Staff)
 	for i := range nodes {
@@ -562,7 +562,7 @@ func (sq *StaffQuery) loadPositions(ctx context.Context, query *StaffPositionQue
 		query.ctx.AppendFieldOnce(staff_position.FieldStaffID)
 	}
 	query.Where(predicate.Staff_Position(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(staff.PositionsColumn), fks...))
+		s.Where(sql.InValues(s.C(staff.StaffsPositionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

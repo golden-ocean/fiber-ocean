@@ -21,13 +21,13 @@ import (
 // RoleQuery is the builder for querying Role entities.
 type RoleQuery struct {
 	config
-	ctx               *QueryContext
-	order             []role.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.Role
-	withMenus         *RoleMenuQuery
-	withOrganizations *RoleOrganizationQuery
-	withStaffs        *StaffRoleQuery
+	ctx                    *QueryContext
+	order                  []role.OrderOption
+	inters                 []Interceptor
+	predicates             []predicate.Role
+	withRolesMenus         *RoleMenuQuery
+	withRolesOrganizations *RoleOrganizationQuery
+	withStaffsRoles        *StaffRoleQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -64,8 +64,8 @@ func (rq *RoleQuery) Order(o ...role.OrderOption) *RoleQuery {
 	return rq
 }
 
-// QueryMenus chains the current query on the "menus" edge.
-func (rq *RoleQuery) QueryMenus() *RoleMenuQuery {
+// QueryRolesMenus chains the current query on the "roles_menus" edge.
+func (rq *RoleQuery) QueryRolesMenus() *RoleMenuQuery {
 	query := (&RoleMenuClient{config: rq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
@@ -78,7 +78,7 @@ func (rq *RoleQuery) QueryMenus() *RoleMenuQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, selector),
 			sqlgraph.To(role_menu.Table, role_menu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.MenusTable, role.MenusColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.RolesMenusTable, role.RolesMenusColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -86,8 +86,8 @@ func (rq *RoleQuery) QueryMenus() *RoleMenuQuery {
 	return query
 }
 
-// QueryOrganizations chains the current query on the "organizations" edge.
-func (rq *RoleQuery) QueryOrganizations() *RoleOrganizationQuery {
+// QueryRolesOrganizations chains the current query on the "roles_organizations" edge.
+func (rq *RoleQuery) QueryRolesOrganizations() *RoleOrganizationQuery {
 	query := (&RoleOrganizationClient{config: rq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
@@ -100,7 +100,7 @@ func (rq *RoleQuery) QueryOrganizations() *RoleOrganizationQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, selector),
 			sqlgraph.To(role_organization.Table, role_organization.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.OrganizationsTable, role.OrganizationsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.RolesOrganizationsTable, role.RolesOrganizationsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -108,8 +108,8 @@ func (rq *RoleQuery) QueryOrganizations() *RoleOrganizationQuery {
 	return query
 }
 
-// QueryStaffs chains the current query on the "staffs" edge.
-func (rq *RoleQuery) QueryStaffs() *StaffRoleQuery {
+// QueryStaffsRoles chains the current query on the "staffs_roles" edge.
+func (rq *RoleQuery) QueryStaffsRoles() *StaffRoleQuery {
 	query := (&StaffRoleClient{config: rq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
@@ -122,7 +122,7 @@ func (rq *RoleQuery) QueryStaffs() *StaffRoleQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(role.Table, role.FieldID, selector),
 			sqlgraph.To(staff_role.Table, staff_role.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, role.StaffsTable, role.StaffsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, role.StaffsRolesTable, role.StaffsRolesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -317,50 +317,50 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		return nil
 	}
 	return &RoleQuery{
-		config:            rq.config,
-		ctx:               rq.ctx.Clone(),
-		order:             append([]role.OrderOption{}, rq.order...),
-		inters:            append([]Interceptor{}, rq.inters...),
-		predicates:        append([]predicate.Role{}, rq.predicates...),
-		withMenus:         rq.withMenus.Clone(),
-		withOrganizations: rq.withOrganizations.Clone(),
-		withStaffs:        rq.withStaffs.Clone(),
+		config:                 rq.config,
+		ctx:                    rq.ctx.Clone(),
+		order:                  append([]role.OrderOption{}, rq.order...),
+		inters:                 append([]Interceptor{}, rq.inters...),
+		predicates:             append([]predicate.Role{}, rq.predicates...),
+		withRolesMenus:         rq.withRolesMenus.Clone(),
+		withRolesOrganizations: rq.withRolesOrganizations.Clone(),
+		withStaffsRoles:        rq.withStaffsRoles.Clone(),
 		// clone intermediate query.
 		sql:  rq.sql.Clone(),
 		path: rq.path,
 	}
 }
 
-// WithMenus tells the query-builder to eager-load the nodes that are connected to
-// the "menus" edge. The optional arguments are used to configure the query builder of the edge.
-func (rq *RoleQuery) WithMenus(opts ...func(*RoleMenuQuery)) *RoleQuery {
+// WithRolesMenus tells the query-builder to eager-load the nodes that are connected to
+// the "roles_menus" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithRolesMenus(opts ...func(*RoleMenuQuery)) *RoleQuery {
 	query := (&RoleMenuClient{config: rq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withMenus = query
+	rq.withRolesMenus = query
 	return rq
 }
 
-// WithOrganizations tells the query-builder to eager-load the nodes that are connected to
-// the "organizations" edge. The optional arguments are used to configure the query builder of the edge.
-func (rq *RoleQuery) WithOrganizations(opts ...func(*RoleOrganizationQuery)) *RoleQuery {
+// WithRolesOrganizations tells the query-builder to eager-load the nodes that are connected to
+// the "roles_organizations" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithRolesOrganizations(opts ...func(*RoleOrganizationQuery)) *RoleQuery {
 	query := (&RoleOrganizationClient{config: rq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withOrganizations = query
+	rq.withRolesOrganizations = query
 	return rq
 }
 
-// WithStaffs tells the query-builder to eager-load the nodes that are connected to
-// the "staffs" edge. The optional arguments are used to configure the query builder of the edge.
-func (rq *RoleQuery) WithStaffs(opts ...func(*StaffRoleQuery)) *RoleQuery {
+// WithStaffsRoles tells the query-builder to eager-load the nodes that are connected to
+// the "staffs_roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithStaffsRoles(opts ...func(*StaffRoleQuery)) *RoleQuery {
 	query := (&StaffRoleClient{config: rq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	rq.withStaffs = query
+	rq.withStaffsRoles = query
 	return rq
 }
 
@@ -443,9 +443,9 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 		nodes       = []*Role{}
 		_spec       = rq.querySpec()
 		loadedTypes = [3]bool{
-			rq.withMenus != nil,
-			rq.withOrganizations != nil,
-			rq.withStaffs != nil,
+			rq.withRolesMenus != nil,
+			rq.withRolesOrganizations != nil,
+			rq.withStaffsRoles != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -466,31 +466,33 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := rq.withMenus; query != nil {
-		if err := rq.loadMenus(ctx, query, nodes,
-			func(n *Role) { n.Edges.Menus = []*Role_Menu{} },
-			func(n *Role, e *Role_Menu) { n.Edges.Menus = append(n.Edges.Menus, e) }); err != nil {
+	if query := rq.withRolesMenus; query != nil {
+		if err := rq.loadRolesMenus(ctx, query, nodes,
+			func(n *Role) { n.Edges.RolesMenus = []*Role_Menu{} },
+			func(n *Role, e *Role_Menu) { n.Edges.RolesMenus = append(n.Edges.RolesMenus, e) }); err != nil {
 			return nil, err
 		}
 	}
-	if query := rq.withOrganizations; query != nil {
-		if err := rq.loadOrganizations(ctx, query, nodes,
-			func(n *Role) { n.Edges.Organizations = []*Role_Organization{} },
-			func(n *Role, e *Role_Organization) { n.Edges.Organizations = append(n.Edges.Organizations, e) }); err != nil {
+	if query := rq.withRolesOrganizations; query != nil {
+		if err := rq.loadRolesOrganizations(ctx, query, nodes,
+			func(n *Role) { n.Edges.RolesOrganizations = []*Role_Organization{} },
+			func(n *Role, e *Role_Organization) {
+				n.Edges.RolesOrganizations = append(n.Edges.RolesOrganizations, e)
+			}); err != nil {
 			return nil, err
 		}
 	}
-	if query := rq.withStaffs; query != nil {
-		if err := rq.loadStaffs(ctx, query, nodes,
-			func(n *Role) { n.Edges.Staffs = []*Staff_Role{} },
-			func(n *Role, e *Staff_Role) { n.Edges.Staffs = append(n.Edges.Staffs, e) }); err != nil {
+	if query := rq.withStaffsRoles; query != nil {
+		if err := rq.loadStaffsRoles(ctx, query, nodes,
+			func(n *Role) { n.Edges.StaffsRoles = []*Staff_Role{} },
+			func(n *Role, e *Staff_Role) { n.Edges.StaffsRoles = append(n.Edges.StaffsRoles, e) }); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
 }
 
-func (rq *RoleQuery) loadMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *Role_Menu)) error {
+func (rq *RoleQuery) loadRolesMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *Role_Menu)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Role)
 	for i := range nodes {
@@ -504,7 +506,7 @@ func (rq *RoleQuery) loadMenus(ctx context.Context, query *RoleMenuQuery, nodes 
 		query.ctx.AppendFieldOnce(role_menu.FieldRoleID)
 	}
 	query.Where(predicate.Role_Menu(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(role.MenusColumn), fks...))
+		s.Where(sql.InValues(s.C(role.RolesMenusColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -520,7 +522,7 @@ func (rq *RoleQuery) loadMenus(ctx context.Context, query *RoleMenuQuery, nodes 
 	}
 	return nil
 }
-func (rq *RoleQuery) loadOrganizations(ctx context.Context, query *RoleOrganizationQuery, nodes []*Role, init func(*Role), assign func(*Role, *Role_Organization)) error {
+func (rq *RoleQuery) loadRolesOrganizations(ctx context.Context, query *RoleOrganizationQuery, nodes []*Role, init func(*Role), assign func(*Role, *Role_Organization)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Role)
 	for i := range nodes {
@@ -534,7 +536,7 @@ func (rq *RoleQuery) loadOrganizations(ctx context.Context, query *RoleOrganizat
 		query.ctx.AppendFieldOnce(role_organization.FieldRoleID)
 	}
 	query.Where(predicate.Role_Organization(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(role.OrganizationsColumn), fks...))
+		s.Where(sql.InValues(s.C(role.RolesOrganizationsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -550,7 +552,7 @@ func (rq *RoleQuery) loadOrganizations(ctx context.Context, query *RoleOrganizat
 	}
 	return nil
 }
-func (rq *RoleQuery) loadStaffs(ctx context.Context, query *StaffRoleQuery, nodes []*Role, init func(*Role), assign func(*Role, *Staff_Role)) error {
+func (rq *RoleQuery) loadStaffsRoles(ctx context.Context, query *StaffRoleQuery, nodes []*Role, init func(*Role), assign func(*Role, *Staff_Role)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Role)
 	for i := range nodes {
@@ -564,7 +566,7 @@ func (rq *RoleQuery) loadStaffs(ctx context.Context, query *StaffRoleQuery, node
 		query.ctx.AppendFieldOnce(staff_role.FieldRoleID)
 	}
 	query.Where(predicate.Staff_Role(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(role.StaffsColumn), fks...))
+		s.Where(sql.InValues(s.C(role.StaffsRolesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

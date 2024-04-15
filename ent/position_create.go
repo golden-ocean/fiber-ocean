@@ -136,19 +136,19 @@ func (pc *PositionCreate) SetID(s string) *PositionCreate {
 	return pc
 }
 
-// AddStaffIDs adds the "staffs" edge to the Staff_Position entity by IDs.
-func (pc *PositionCreate) AddStaffIDs(ids ...string) *PositionCreate {
-	pc.mutation.AddStaffIDs(ids...)
+// AddStaffsPositionIDs adds the "staffs_positions" edge to the Staff_Position entity by IDs.
+func (pc *PositionCreate) AddStaffsPositionIDs(ids ...string) *PositionCreate {
+	pc.mutation.AddStaffsPositionIDs(ids...)
 	return pc
 }
 
-// AddStaffs adds the "staffs" edges to the Staff_Position entity.
-func (pc *PositionCreate) AddStaffs(s ...*Staff_Position) *PositionCreate {
+// AddStaffsPositions adds the "staffs_positions" edges to the Staff_Position entity.
+func (pc *PositionCreate) AddStaffsPositions(s ...*Staff_Position) *PositionCreate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return pc.AddStaffIDs(ids...)
+	return pc.AddStaffsPositionIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
@@ -313,12 +313,12 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		_spec.SetField(position.FieldCode, field.TypeString, value)
 		_node.Code = value
 	}
-	if nodes := pc.mutation.StaffsIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.StaffsPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   position.StaffsTable,
-			Columns: []string{position.StaffsColumn},
+			Table:   position.StaffsPositionsTable,
+			Columns: []string{position.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),

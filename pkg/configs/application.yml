@@ -10,16 +10,16 @@ datasource:
   username: "root"
   password: "xinmiao"
   charset: "utf8mb4"
-  name: "fiber-ocean"
+  name: "fiber-ocean-test"
   max_connections: 100
   max_idle_connections: 50
   max_lifetime_connections: 2
 
 jwt:
-  secret-key: "fiber-arco-sssffffddddsfsdsddfds"
-  secret-key-expire-minutes: 5
-  refresh-key: "fiber-refresh"
-  refresh-key-expire-minutes: 30
+  secret-key: "fiber-ocean-access"
+  secret-key-expire-minutes: 30
+  refresh-key: "fiber-ocean-refresh"
+  refresh-key-expire-minutes: 300
   # refresh-key-expire-hours: 12
 
 redis:

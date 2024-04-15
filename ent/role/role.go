@@ -31,35 +31,35 @@ const (
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
-	// EdgeMenus holds the string denoting the menus edge name in mutations.
-	EdgeMenus = "menus"
-	// EdgeOrganizations holds the string denoting the organizations edge name in mutations.
-	EdgeOrganizations = "organizations"
-	// EdgeStaffs holds the string denoting the staffs edge name in mutations.
-	EdgeStaffs = "staffs"
+	// EdgeRolesMenus holds the string denoting the roles_menus edge name in mutations.
+	EdgeRolesMenus = "roles_menus"
+	// EdgeRolesOrganizations holds the string denoting the roles_organizations edge name in mutations.
+	EdgeRolesOrganizations = "roles_organizations"
+	// EdgeStaffsRoles holds the string denoting the staffs_roles edge name in mutations.
+	EdgeStaffsRoles = "staffs_roles"
 	// Table holds the table name of the role in the database.
 	Table = "system_roles"
-	// MenusTable is the table that holds the menus relation/edge.
-	MenusTable = "system_roles_menus"
-	// MenusInverseTable is the table name for the Role_Menu entity.
+	// RolesMenusTable is the table that holds the roles_menus relation/edge.
+	RolesMenusTable = "system_roles_menus"
+	// RolesMenusInverseTable is the table name for the Role_Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "role_menu" package.
-	MenusInverseTable = "system_roles_menus"
-	// MenusColumn is the table column denoting the menus relation/edge.
-	MenusColumn = "role_id"
-	// OrganizationsTable is the table that holds the organizations relation/edge.
-	OrganizationsTable = "system_roles_organizations"
-	// OrganizationsInverseTable is the table name for the Role_Organization entity.
+	RolesMenusInverseTable = "system_roles_menus"
+	// RolesMenusColumn is the table column denoting the roles_menus relation/edge.
+	RolesMenusColumn = "role_id"
+	// RolesOrganizationsTable is the table that holds the roles_organizations relation/edge.
+	RolesOrganizationsTable = "system_roles_organizations"
+	// RolesOrganizationsInverseTable is the table name for the Role_Organization entity.
 	// It exists in this package in order to avoid circular dependency with the "role_organization" package.
-	OrganizationsInverseTable = "system_roles_organizations"
-	// OrganizationsColumn is the table column denoting the organizations relation/edge.
-	OrganizationsColumn = "role_id"
-	// StaffsTable is the table that holds the staffs relation/edge.
-	StaffsTable = "system_staffs_roles"
-	// StaffsInverseTable is the table name for the Staff_Role entity.
+	RolesOrganizationsInverseTable = "system_roles_organizations"
+	// RolesOrganizationsColumn is the table column denoting the roles_organizations relation/edge.
+	RolesOrganizationsColumn = "role_id"
+	// StaffsRolesTable is the table that holds the staffs_roles relation/edge.
+	StaffsRolesTable = "system_staffs_roles"
+	// StaffsRolesInverseTable is the table name for the Staff_Role entity.
 	// It exists in this package in order to avoid circular dependency with the "staff_role" package.
-	StaffsInverseTable = "system_staffs_roles"
-	// StaffsColumn is the table column denoting the staffs relation/edge.
-	StaffsColumn = "role_id"
+	StaffsRolesInverseTable = "system_staffs_roles"
+	// StaffsRolesColumn is the table column denoting the staffs_roles relation/edge.
+	StaffsRolesColumn = "role_id"
 )
 
 // Columns holds all SQL columns for role fields.
@@ -162,65 +162,65 @@ func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
 }
 
-// ByMenusCount orders the results by menus count.
-func ByMenusCount(opts ...sql.OrderTermOption) OrderOption {
+// ByRolesMenusCount orders the results by roles_menus count.
+func ByRolesMenusCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newMenusStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newRolesMenusStep(), opts...)
 	}
 }
 
-// ByMenus orders the results by menus terms.
-func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByRolesMenus orders the results by roles_menus terms.
+func ByRolesMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newRolesMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
-// ByOrganizationsCount orders the results by organizations count.
-func ByOrganizationsCount(opts ...sql.OrderTermOption) OrderOption {
+// ByRolesOrganizationsCount orders the results by roles_organizations count.
+func ByRolesOrganizationsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newOrganizationsStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newRolesOrganizationsStep(), opts...)
 	}
 }
 
-// ByOrganizations orders the results by organizations terms.
-func ByOrganizations(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByRolesOrganizations orders the results by roles_organizations terms.
+func ByRolesOrganizations(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newOrganizationsStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newRolesOrganizationsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
-// ByStaffsCount orders the results by staffs count.
-func ByStaffsCount(opts ...sql.OrderTermOption) OrderOption {
+// ByStaffsRolesCount orders the results by staffs_roles count.
+func ByStaffsRolesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newStaffsStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newStaffsRolesStep(), opts...)
 	}
 }
 
-// ByStaffs orders the results by staffs terms.
-func ByStaffs(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByStaffsRoles orders the results by staffs_roles terms.
+func ByStaffsRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newStaffsStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newStaffsRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newMenusStep() *sqlgraph.Step {
+func newRolesMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, MenusTable, MenusColumn),
+		sqlgraph.To(RolesMenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RolesMenusTable, RolesMenusColumn),
 	)
 }
-func newOrganizationsStep() *sqlgraph.Step {
+func newRolesOrganizationsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(OrganizationsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, OrganizationsTable, OrganizationsColumn),
+		sqlgraph.To(RolesOrganizationsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RolesOrganizationsTable, RolesOrganizationsColumn),
 	)
 }
-func newStaffsStep() *sqlgraph.Step {
+func newStaffsRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(StaffsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, StaffsTable, StaffsColumn),
+		sqlgraph.To(StaffsRolesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, StaffsRolesTable, StaffsRolesColumn),
 	)
 }

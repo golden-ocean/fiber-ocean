@@ -7,6 +7,7 @@ import (
 	"github.com/golden-ocean/fiber-ocean/ent"
 	"github.com/golden-ocean/fiber-ocean/pkg/common/global"
 	"github.com/jinzhu/copier"
+	"github.com/rs/xid"
 )
 
 type Service struct {
@@ -89,7 +90,7 @@ func (s *Service) buildTree(organizations []*OrganizationOutput) []*Organization
 	// 寻找根组织并返回
 	var roots []*OrganizationOutput
 	for _, org := range organizations {
-		if len(org.ParentID) == 0 {
+		if org.ParentID == xid.NilID().String() {
 			roots = append(roots, org)
 		}
 	}
@@ -108,7 +109,7 @@ func (s *Service) isValidParentID(id, parentID string, organizations []*ent.Orga
 		orgMap[org.ID] = org
 	}
 	// 递归地查找组织的所有祖先
-	for len(parentID) > 0 {
+	for parentID != xid.NilID().String() {
 		// 检查组织的父级ID是否在祖先集合中
 		if _, ok := ancestors[parentID]; ok {
 			// 如果父级ID已经在祖先集合中，说明存在循环引用，返回 false

@@ -5,13 +5,13 @@ import (
 )
 
 func InitRoutes(route fiber.Router) {
-	handler := NewHandler()
+	h := NewHandler()
 	r := route.Group("dictionaries")
 
-	r.Post("/", handler.Create)
-	r.Put("/", handler.Update)
-	r.Delete("/", handler.Delete)
-	r.Get("/", handler.QueryPage)
-	r.Get("/code/:code", handler.QueryByCode)
+	r.Post("/", h.Create)
+	r.Put("/", h.Update)
+	r.Delete("/", h.Delete)
+	r.Get("/", h.QueryPage)
+	r.Get("/code/:code", h.QueryByCode)
 
 }

@@ -668,21 +668,21 @@ func CodeContainsFold(v string) predicate.Position {
 	return predicate.Position(sql.FieldContainsFold(FieldCode, v))
 }
 
-// HasStaffs applies the HasEdge predicate on the "staffs" edge.
-func HasStaffs() predicate.Position {
+// HasStaffsPositions applies the HasEdge predicate on the "staffs_positions" edge.
+func HasStaffsPositions() predicate.Position {
 	return predicate.Position(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, StaffsTable, StaffsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, StaffsPositionsTable, StaffsPositionsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasStaffsWith applies the HasEdge predicate on the "staffs" edge with a given conditions (other predicates).
-func HasStaffsWith(preds ...predicate.Staff_Position) predicate.Position {
+// HasStaffsPositionsWith applies the HasEdge predicate on the "staffs_positions" edge with a given conditions (other predicates).
+func HasStaffsPositionsWith(preds ...predicate.Staff_Position) predicate.Position {
 	return predicate.Position(func(s *sql.Selector) {
-		step := newStaffsStep()
+		step := newStaffsPositionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

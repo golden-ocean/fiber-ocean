@@ -7,8 +7,6 @@ import (
 
 	"github.com/golden-ocean/fiber-ocean/ent"
 	"github.com/golden-ocean/fiber-ocean/ent/staff"
-	"github.com/golden-ocean/fiber-ocean/ent/staff_position"
-	"github.com/golden-ocean/fiber-ocean/ent/staff_role"
 	"github.com/golden-ocean/fiber-ocean/pkg/utils"
 )
 
@@ -134,18 +132,64 @@ func (r *Repository) Exist(w *WhereParams, c *ent.Client) (bool, error) {
 
 func (r *Repository) QueryByUniqueField(w *WhereParams, c *ent.Client) (*ent.Staff, error) {
 	b := c.Staff.Query()
+	if len(strings.TrimSpace(w.ID)) > 0 {
+		b = b.Where(staff.IDEQ(w.ID))
+	}
 	if len(strings.TrimSpace(w.Username)) > 0 {
-		b = b.Where(staff.UsernameContains(w.Username))
+		b = b.Where(staff.UsernameEqualFold(w.Username))
 	}
 	if len(strings.TrimSpace(w.Email)) > 0 {
-		b = b.Where(staff.EmailContains(w.Email))
+		b = b.Where(staff.EmailEqualFold(w.Email))
 	}
 	if len(strings.TrimSpace(w.Mobile)) > 0 {
-		b = b.Where(staff.MobileContains(w.Mobile))
+		b = b.Where(staff.MobileEqualFold(w.Mobile))
 	}
 	e, err := b.First(r.ctx)
 	return e, err
 }
+
+// func (r *Repository) QueryPage(w *WhereParams, c *ent.Client) ([]*ent.Staff, int, error) {
+// 	b := c.Staff.Query()
+// 	if len(strings.TrimSpace(w.Username)) > 0 {
+// 		b = b.Where(staff.UsernameContains(w.Username))
+// 	}
+// 	if len(strings.TrimSpace(w.Name)) > 0 {
+// 		b = b.Where(staff.NameContains(w.Name))
+// 	}
+// 	if len(w.OrganizationID) > 0 {
+// 		b = b.Where(staff.OrganizationID(w.OrganizationID))
+// 	}
+// 	if len(strings.TrimSpace(w.Email)) > 0 {
+// 		b = b.Where(staff.EmailContains(w.Email))
+// 	}
+// 	if len(strings.TrimSpace(w.Mobile)) > 0 {
+// 		b = b.Where(staff.MobileContains(w.Mobile))
+// 	}
+// 	if len(strings.TrimSpace(w.Gender)) > 0 {
+// 		b = b.Where(staff.GenderEqualFold(w.Gender))
+// 	}
+// 	if len(strings.TrimSpace(w.WorkStatus)) > 0 {
+// 		b = b.Where(staff.WorkStatusEqualFold(w.WorkStatus))
+// 	}
+// 	if len(strings.TrimSpace(w.Status)) > 0 {
+// 		b = b.Where(staff.StatusEQ(w.Status))
+// 	}
+// 	if len(strings.TrimSpace(w.Remark)) > 0 {
+// 		b = b.Where(staff.RemarkContains(w.Remark))
+// 	}
+
+// 	total, err := b.Count(r.ctx)
+// 	if err != nil {
+// 		return nil, 0, err
+// 	}
+// 	b.Select(SelectFields...)
+// 	es, err := b.Order(staff.BySort()).
+// 		WithStaffsPositions().WithStaffsRoles().
+// 		Limit(w.PageSize).
+// 		Offset((w.Current - 1) * w.PageSize).
+// 		All(r.ctx)
+// 	return es, total, err
+// }
 
 func (r *Repository) QueryPage(w *WhereParams, c *ent.Client) ([]*ent.Staff, int, error) {
 	b := c.Staff.Query()
@@ -176,18 +220,11 @@ func (r *Repository) QueryPage(w *WhereParams, c *ent.Client) ([]*ent.Staff, int
 	if len(strings.TrimSpace(w.Remark)) > 0 {
 		b = b.Where(staff.RemarkContains(w.Remark))
 	}
-
 	total, err := b.Count(r.ctx)
 	if err != nil {
 		return nil, 0, err
 	}
 	es, err := b.Order(staff.BySort()).
-		WithPositions(func(pq *ent.StaffPositionQuery) {
-			pq.Select(staff_position.FieldPositionID)
-		}).
-		WithRoles(func(rq *ent.StaffRoleQuery) {
-			rq.Select(staff_role.FieldRoleID)
-		}).
 		Limit(w.PageSize).
 		Offset((w.Current - 1) * w.PageSize).
 		All(r.ctx)

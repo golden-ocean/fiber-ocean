@@ -52,14 +52,14 @@ func (s *Service) QueryInfo(id string) (*InfoOutput, error) {
 	if err != nil {
 		return nil, err
 	}
-	// mo, err := s.menuService.QueryByStaffID(re.ID)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	mo, po, err := s.menuService.QueryByStaffID(re.ID)
+	if err != nil {
+		return nil, err
+	}
 	return &InfoOutput{
-		Staff: so,
-		// Menus: mo,
-		// Permissions: po,
+		Staff:       so,
+		Menus:       mo,
+		Permissions: po,
 	}, err
 }
 

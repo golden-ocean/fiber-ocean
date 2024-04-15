@@ -49,8 +49,8 @@ type OrganizationEdges struct {
 	Parent *Organization `json:"parent,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*Organization `json:"children,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role_Organization `json:"roles,omitempty"`
+	// RolesOrganizations holds the value of the roles_organizations edge.
+	RolesOrganizations []*Role_Organization `json:"roles_organizations,omitempty"`
 	// Staffs holds the value of the staffs edge.
 	Staffs []*Staff `json:"staffs,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -78,13 +78,13 @@ func (e OrganizationEdges) ChildrenOrErr() ([]*Organization, error) {
 	return nil, &NotLoadedError{edge: "children"}
 }
 
-// RolesOrErr returns the Roles value or an error if the edge
+// RolesOrganizationsOrErr returns the RolesOrganizations value or an error if the edge
 // was not loaded in eager-loading.
-func (e OrganizationEdges) RolesOrErr() ([]*Role_Organization, error) {
+func (e OrganizationEdges) RolesOrganizationsOrErr() ([]*Role_Organization, error) {
 	if e.loadedTypes[2] {
-		return e.Roles, nil
+		return e.RolesOrganizations, nil
 	}
-	return nil, &NotLoadedError{edge: "roles"}
+	return nil, &NotLoadedError{edge: "roles_organizations"}
 }
 
 // StaffsOrErr returns the Staffs value or an error if the edge
@@ -209,9 +209,9 @@ func (o *Organization) QueryChildren() *OrganizationQuery {
 	return NewOrganizationClient(o.config).QueryChildren(o)
 }
 
-// QueryRoles queries the "roles" edge of the Organization entity.
-func (o *Organization) QueryRoles() *RoleOrganizationQuery {
-	return NewOrganizationClient(o.config).QueryRoles(o)
+// QueryRolesOrganizations queries the "roles_organizations" edge of the Organization entity.
+func (o *Organization) QueryRolesOrganizations() *RoleOrganizationQuery {
+	return NewOrganizationClient(o.config).QueryRolesOrganizations(o)
 }
 
 // QueryStaffs queries the "staffs" edge of the Organization entity.

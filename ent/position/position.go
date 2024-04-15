@@ -31,17 +31,17 @@ const (
 	FieldName = "name"
 	// FieldCode holds the string denoting the code field in the database.
 	FieldCode = "code"
-	// EdgeStaffs holds the string denoting the staffs edge name in mutations.
-	EdgeStaffs = "staffs"
+	// EdgeStaffsPositions holds the string denoting the staffs_positions edge name in mutations.
+	EdgeStaffsPositions = "staffs_positions"
 	// Table holds the table name of the position in the database.
 	Table = "system_positions"
-	// StaffsTable is the table that holds the staffs relation/edge.
-	StaffsTable = "system_staffs_positions"
-	// StaffsInverseTable is the table name for the Staff_Position entity.
+	// StaffsPositionsTable is the table that holds the staffs_positions relation/edge.
+	StaffsPositionsTable = "system_staffs_positions"
+	// StaffsPositionsInverseTable is the table name for the Staff_Position entity.
 	// It exists in this package in order to avoid circular dependency with the "staff_position" package.
-	StaffsInverseTable = "system_staffs_positions"
-	// StaffsColumn is the table column denoting the staffs relation/edge.
-	StaffsColumn = "position_id"
+	StaffsPositionsInverseTable = "system_staffs_positions"
+	// StaffsPositionsColumn is the table column denoting the staffs_positions relation/edge.
+	StaffsPositionsColumn = "position_id"
 )
 
 // Columns holds all SQL columns for position fields.
@@ -144,23 +144,23 @@ func ByCode(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCode, opts...).ToFunc()
 }
 
-// ByStaffsCount orders the results by staffs count.
-func ByStaffsCount(opts ...sql.OrderTermOption) OrderOption {
+// ByStaffsPositionsCount orders the results by staffs_positions count.
+func ByStaffsPositionsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newStaffsStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newStaffsPositionsStep(), opts...)
 	}
 }
 
-// ByStaffs orders the results by staffs terms.
-func ByStaffs(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByStaffsPositions orders the results by staffs_positions terms.
+func ByStaffsPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newStaffsStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newStaffsPositionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newStaffsStep() *sqlgraph.Step {
+func newStaffsPositionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(StaffsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, StaffsTable, StaffsColumn),
+		sqlgraph.To(StaffsPositionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, StaffsPositionsTable, StaffsPositionsColumn),
 	)
 }

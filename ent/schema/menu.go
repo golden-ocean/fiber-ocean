@@ -31,7 +31,7 @@ func (Menu) Fields() []ent.Field {
 		field.String("component").Optional().Comment("组件"),
 		field.String("type").Optional().Comment("菜单类型"),
 		field.String("method").Optional().Comment("请求方法"),
-		field.Bool("visible").Optional().Default(false).Comment("是否隐藏"),
+		field.String("visible").Optional().Default("true").Comment("是否显示"),
 	}
 }
 
@@ -39,7 +39,7 @@ func (Menu) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("children", Menu.Type).
 			From("parent").Unique().Field("parent_id"),
-		edge.To("roles", Role_Menu.Type),
+		edge.To("roles_menus", Role_Menu.Type),
 	}
 }
 

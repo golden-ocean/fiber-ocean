@@ -217,34 +217,34 @@ func (sc *StaffCreate) SetOrganization(o *Organization) *StaffCreate {
 	return sc.SetOrganizationID(o.ID)
 }
 
-// AddRoleIDs adds the "roles" edge to the Staff_Role entity by IDs.
-func (sc *StaffCreate) AddRoleIDs(ids ...string) *StaffCreate {
-	sc.mutation.AddRoleIDs(ids...)
+// AddStaffsRoleIDs adds the "staffs_roles" edge to the Staff_Role entity by IDs.
+func (sc *StaffCreate) AddStaffsRoleIDs(ids ...string) *StaffCreate {
+	sc.mutation.AddStaffsRoleIDs(ids...)
 	return sc
 }
 
-// AddRoles adds the "roles" edges to the Staff_Role entity.
-func (sc *StaffCreate) AddRoles(s ...*Staff_Role) *StaffCreate {
+// AddStaffsRoles adds the "staffs_roles" edges to the Staff_Role entity.
+func (sc *StaffCreate) AddStaffsRoles(s ...*Staff_Role) *StaffCreate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return sc.AddRoleIDs(ids...)
+	return sc.AddStaffsRoleIDs(ids...)
 }
 
-// AddPositionIDs adds the "positions" edge to the Staff_Position entity by IDs.
-func (sc *StaffCreate) AddPositionIDs(ids ...string) *StaffCreate {
-	sc.mutation.AddPositionIDs(ids...)
+// AddStaffsPositionIDs adds the "staffs_positions" edge to the Staff_Position entity by IDs.
+func (sc *StaffCreate) AddStaffsPositionIDs(ids ...string) *StaffCreate {
+	sc.mutation.AddStaffsPositionIDs(ids...)
 	return sc
 }
 
-// AddPositions adds the "positions" edges to the Staff_Position entity.
-func (sc *StaffCreate) AddPositions(s ...*Staff_Position) *StaffCreate {
+// AddStaffsPositions adds the "staffs_positions" edges to the Staff_Position entity.
+func (sc *StaffCreate) AddStaffsPositions(s ...*Staff_Position) *StaffCreate {
 	ids := make([]string, len(s))
 	for i := range s {
 		ids[i] = s[i].ID
 	}
-	return sc.AddPositionIDs(ids...)
+	return sc.AddStaffsPositionIDs(ids...)
 }
 
 // Mutation returns the StaffMutation object of the builder.
@@ -474,12 +474,12 @@ func (sc *StaffCreate) createSpec() (*Staff, *sqlgraph.CreateSpec) {
 		_node.OrganizationID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := sc.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.StaffsRolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   staff.RolesTable,
-			Columns: []string{staff.RolesColumn},
+			Table:   staff.StaffsRolesTable,
+			Columns: []string{staff.StaffsRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_role.FieldID, field.TypeString),
@@ -490,12 +490,12 @@ func (sc *StaffCreate) createSpec() (*Staff, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := sc.mutation.PositionsIDs(); len(nodes) > 0 {
+	if nodes := sc.mutation.StaffsPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   staff.PositionsTable,
-			Columns: []string{staff.PositionsColumn},
+			Table:   staff.StaffsPositionsTable,
+			Columns: []string{staff.StaffsPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(staff_position.FieldID, field.TypeString),

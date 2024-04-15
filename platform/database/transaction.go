@@ -29,8 +29,8 @@ import (
 //		err = txFunc(tx)
 //		return err
 //	}
-func WithTx(ctx context.Context, client *ent.Client, fn func(tx *ent.Tx) error) error {
-	tx, err := client.Tx(ctx)
+func WithTx(client *ent.Client, fn func(tx *ent.Tx) error) error {
+	tx, err := client.Tx(context.Background())
 	if err != nil {
 		return err
 	}

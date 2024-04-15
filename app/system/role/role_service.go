@@ -1,7 +1,6 @@
 package role
 
 import (
-	"context"
 	"errors"
 
 	"github.com/golden-ocean/fiber-ocean/app/system/role_menu"
@@ -83,8 +82,7 @@ func (s *Service) GrantMenus(r *RoleMenuInput) error {
 		return err
 	}
 	remove_ids, add_ids := lo.Difference(db_menu_ids, r.MenuIDs)
-	ctx := context.Background()
-	err = database.WithTx(ctx, s.client, func(tx *ent.Tx) error {
+	err = database.WithTx(s.client, func(tx *ent.Tx) error {
 		if len(remove_ids) > 0 {
 			if err := s.roleMenuRepo.Delete(&role_menu.DeleteInput{RoleID: r.RoleID, MenuIDs: remove_ids}, s.client); err != nil {
 				return err

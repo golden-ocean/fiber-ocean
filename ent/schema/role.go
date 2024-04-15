@@ -30,9 +30,9 @@ func (Role) Fields() []ent.Field {
 
 func (Role) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("menus", Role_Menu.Type),
-		edge.To("organizations", Role_Organization.Type),
-		edge.To("staffs", Staff_Role.Type),
+		edge.To("roles_menus", Role_Menu.Type),
+		edge.To("roles_organizations", Role_Organization.Type),
+		edge.To("staffs_roles", Staff_Role.Type),
 	}
 }
 

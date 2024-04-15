@@ -86,7 +86,7 @@ var (
 		{Name: "component", Type: field.TypeString, Nullable: true, Comment: "组件"},
 		{Name: "type", Type: field.TypeString, Nullable: true, Comment: "菜单类型"},
 		{Name: "method", Type: field.TypeString, Nullable: true, Comment: "请求方法"},
-		{Name: "visible", Type: field.TypeBool, Nullable: true, Comment: "是否隐藏", Default: false},
+		{Name: "visible", Type: field.TypeString, Nullable: true, Comment: "是否显示", Default: "true"},
 		{Name: "parent_id", Type: field.TypeString, Nullable: true, Size: 20, Comment: "父级ID"},
 	}
 	// SystemMenusTable holds the schema information for the "system_menus" table.
@@ -198,13 +198,13 @@ var (
 		PrimaryKey: []*schema.Column{SystemRolesMenusColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "system_roles_menus_system_menus_roles",
+				Symbol:     "system_roles_menus_system_menus_roles_menus",
 				Columns:    []*schema.Column{SystemRolesMenusColumns[5]},
 				RefColumns: []*schema.Column{SystemMenusColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "system_roles_menus_system_roles_menus",
+				Symbol:     "system_roles_menus_system_roles_roles_menus",
 				Columns:    []*schema.Column{SystemRolesMenusColumns[6]},
 				RefColumns: []*schema.Column{SystemRolesColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -235,13 +235,13 @@ var (
 		PrimaryKey: []*schema.Column{SystemRolesOrganizationsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "system_roles_organizations_system_organizations_roles",
+				Symbol:     "system_roles_organizations_system_organizations_roles_organizations",
 				Columns:    []*schema.Column{SystemRolesOrganizationsColumns[5]},
 				RefColumns: []*schema.Column{SystemOrganizationsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "system_roles_organizations_system_roles_organizations",
+				Symbol:     "system_roles_organizations_system_roles_roles_organizations",
 				Columns:    []*schema.Column{SystemRolesOrganizationsColumns[6]},
 				RefColumns: []*schema.Column{SystemRolesColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -306,13 +306,13 @@ var (
 		PrimaryKey: []*schema.Column{SystemStaffsPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "system_staffs_positions_system_positions_staffs",
+				Symbol:     "system_staffs_positions_system_positions_staffs_positions",
 				Columns:    []*schema.Column{SystemStaffsPositionsColumns[5]},
 				RefColumns: []*schema.Column{SystemPositionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "system_staffs_positions_system_staffs_positions",
+				Symbol:     "system_staffs_positions_system_staffs_staffs_positions",
 				Columns:    []*schema.Column{SystemStaffsPositionsColumns[6]},
 				RefColumns: []*schema.Column{SystemStaffsColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -343,13 +343,13 @@ var (
 		PrimaryKey: []*schema.Column{SystemStaffsRolesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "system_staffs_roles_system_roles_staffs",
+				Symbol:     "system_staffs_roles_system_roles_staffs_roles",
 				Columns:    []*schema.Column{SystemStaffsRolesColumns[5]},
 				RefColumns: []*schema.Column{SystemRolesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "system_staffs_roles_system_staffs_roles",
+				Symbol:     "system_staffs_roles_system_staffs_staffs_roles",
 				Columns:    []*schema.Column{SystemStaffsRolesColumns[6]},
 				RefColumns: []*schema.Column{SystemStaffsColumns[0]},
 				OnDelete:   schema.NoAction,

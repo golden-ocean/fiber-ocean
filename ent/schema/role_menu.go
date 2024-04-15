@@ -31,8 +31,8 @@ func (Role_Menu) Fields() []ent.Field {
 
 func (Role_Menu) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("roles", Role.Type).Field("role_id").Required().Ref("menus").Unique(),
-		edge.From("menus", Menu.Type).Field("menu_id").Required().Ref("roles").Unique(),
+		edge.From("roles", Role.Type).Field("role_id").Required().Ref("roles_menus").Unique(),
+		edge.From("menus", Menu.Type).Field("menu_id").Required().Ref("roles_menus").Unique(),
 	}
 }
 

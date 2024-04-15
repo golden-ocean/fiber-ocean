@@ -60,10 +60,10 @@ type Staff struct {
 type StaffEdges struct {
 	// Organization holds the value of the organization edge.
 	Organization *Organization `json:"organization,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Staff_Role `json:"roles,omitempty"`
-	// Positions holds the value of the positions edge.
-	Positions []*Staff_Position `json:"positions,omitempty"`
+	// StaffsRoles holds the value of the staffs_roles edge.
+	StaffsRoles []*Staff_Role `json:"staffs_roles,omitempty"`
+	// StaffsPositions holds the value of the staffs_positions edge.
+	StaffsPositions []*Staff_Position `json:"staffs_positions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
@@ -80,22 +80,22 @@ func (e StaffEdges) OrganizationOrErr() (*Organization, error) {
 	return nil, &NotLoadedError{edge: "organization"}
 }
 
-// RolesOrErr returns the Roles value or an error if the edge
+// StaffsRolesOrErr returns the StaffsRoles value or an error if the edge
 // was not loaded in eager-loading.
-func (e StaffEdges) RolesOrErr() ([]*Staff_Role, error) {
+func (e StaffEdges) StaffsRolesOrErr() ([]*Staff_Role, error) {
 	if e.loadedTypes[1] {
-		return e.Roles, nil
+		return e.StaffsRoles, nil
 	}
-	return nil, &NotLoadedError{edge: "roles"}
+	return nil, &NotLoadedError{edge: "staffs_roles"}
 }
 
-// PositionsOrErr returns the Positions value or an error if the edge
+// StaffsPositionsOrErr returns the StaffsPositions value or an error if the edge
 // was not loaded in eager-loading.
-func (e StaffEdges) PositionsOrErr() ([]*Staff_Position, error) {
+func (e StaffEdges) StaffsPositionsOrErr() ([]*Staff_Position, error) {
 	if e.loadedTypes[2] {
-		return e.Positions, nil
+		return e.StaffsPositions, nil
 	}
-	return nil, &NotLoadedError{edge: "positions"}
+	return nil, &NotLoadedError{edge: "staffs_positions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -242,14 +242,14 @@ func (s *Staff) QueryOrganization() *OrganizationQuery {
 	return NewStaffClient(s.config).QueryOrganization(s)
 }
 
-// QueryRoles queries the "roles" edge of the Staff entity.
-func (s *Staff) QueryRoles() *StaffRoleQuery {
-	return NewStaffClient(s.config).QueryRoles(s)
+// QueryStaffsRoles queries the "staffs_roles" edge of the Staff entity.
+func (s *Staff) QueryStaffsRoles() *StaffRoleQuery {
+	return NewStaffClient(s.config).QueryStaffsRoles(s)
 }
 
-// QueryPositions queries the "positions" edge of the Staff entity.
-func (s *Staff) QueryPositions() *StaffPositionQuery {
-	return NewStaffClient(s.config).QueryPositions(s)
+// QueryStaffsPositions queries the "staffs_positions" edge of the Staff entity.
+func (s *Staff) QueryStaffsPositions() *StaffPositionQuery {
+	return NewStaffClient(s.config).QueryStaffsPositions(s)
 }
 
 // Update returns a builder for updating this Staff.

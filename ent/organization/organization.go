@@ -37,8 +37,8 @@ const (
 	EdgeParent = "parent"
 	// EdgeChildren holds the string denoting the children edge name in mutations.
 	EdgeChildren = "children"
-	// EdgeRoles holds the string denoting the roles edge name in mutations.
-	EdgeRoles = "roles"
+	// EdgeRolesOrganizations holds the string denoting the roles_organizations edge name in mutations.
+	EdgeRolesOrganizations = "roles_organizations"
 	// EdgeStaffs holds the string denoting the staffs edge name in mutations.
 	EdgeStaffs = "staffs"
 	// Table holds the table name of the organization in the database.
@@ -51,13 +51,13 @@ const (
 	ChildrenTable = "system_organizations"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "parent_id"
-	// RolesTable is the table that holds the roles relation/edge.
-	RolesTable = "system_roles_organizations"
-	// RolesInverseTable is the table name for the Role_Organization entity.
+	// RolesOrganizationsTable is the table that holds the roles_organizations relation/edge.
+	RolesOrganizationsTable = "system_roles_organizations"
+	// RolesOrganizationsInverseTable is the table name for the Role_Organization entity.
 	// It exists in this package in order to avoid circular dependency with the "role_organization" package.
-	RolesInverseTable = "system_roles_organizations"
-	// RolesColumn is the table column denoting the roles relation/edge.
-	RolesColumn = "organization_id"
+	RolesOrganizationsInverseTable = "system_roles_organizations"
+	// RolesOrganizationsColumn is the table column denoting the roles_organizations relation/edge.
+	RolesOrganizationsColumn = "organization_id"
 	// StaffsTable is the table that holds the staffs relation/edge.
 	StaffsTable = "system_staffs"
 	// StaffsInverseTable is the table name for the Staff entity.
@@ -194,17 +194,17 @@ func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByRolesCount orders the results by roles count.
-func ByRolesCount(opts ...sql.OrderTermOption) OrderOption {
+// ByRolesOrganizationsCount orders the results by roles_organizations count.
+func ByRolesOrganizationsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newRolesStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newRolesOrganizationsStep(), opts...)
 	}
 }
 
-// ByRoles orders the results by roles terms.
-func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByRolesOrganizations orders the results by roles_organizations terms.
+func ByRolesOrganizations(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newRolesOrganizationsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -235,11 +235,11 @@ func newChildrenStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
 	)
 }
-func newRolesStep() *sqlgraph.Step {
+func newRolesOrganizationsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(RolesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, RolesTable, RolesColumn),
+		sqlgraph.To(RolesOrganizationsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RolesOrganizationsTable, RolesOrganizationsColumn),
 	)
 }
 func newStaffsStep() *sqlgraph.Step {

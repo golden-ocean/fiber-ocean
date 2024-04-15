@@ -223,15 +223,15 @@ func (mc *MenuCreate) SetNillableMethod(s *string) *MenuCreate {
 }
 
 // SetVisible sets the "visible" field.
-func (mc *MenuCreate) SetVisible(b bool) *MenuCreate {
-	mc.mutation.SetVisible(b)
+func (mc *MenuCreate) SetVisible(s string) *MenuCreate {
+	mc.mutation.SetVisible(s)
 	return mc
 }
 
 // SetNillableVisible sets the "visible" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableVisible(b *bool) *MenuCreate {
-	if b != nil {
-		mc.SetVisible(*b)
+func (mc *MenuCreate) SetNillableVisible(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetVisible(*s)
 	}
 	return mc
 }
@@ -262,19 +262,19 @@ func (mc *MenuCreate) AddChildren(m ...*Menu) *MenuCreate {
 	return mc.AddChildIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role_Menu entity by IDs.
-func (mc *MenuCreate) AddRoleIDs(ids ...string) *MenuCreate {
-	mc.mutation.AddRoleIDs(ids...)
+// AddRolesMenuIDs adds the "roles_menus" edge to the Role_Menu entity by IDs.
+func (mc *MenuCreate) AddRolesMenuIDs(ids ...string) *MenuCreate {
+	mc.mutation.AddRolesMenuIDs(ids...)
 	return mc
 }
 
-// AddRoles adds the "roles" edges to the Role_Menu entity.
-func (mc *MenuCreate) AddRoles(r ...*Role_Menu) *MenuCreate {
+// AddRolesMenus adds the "roles_menus" edges to the Role_Menu entity.
+func (mc *MenuCreate) AddRolesMenus(r ...*Role_Menu) *MenuCreate {
 	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
-	return mc.AddRoleIDs(ids...)
+	return mc.AddRolesMenuIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -456,7 +456,7 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_node.Method = value
 	}
 	if value, ok := mc.mutation.Visible(); ok {
-		_spec.SetField(menu.FieldVisible, field.TypeBool, value)
+		_spec.SetField(menu.FieldVisible, field.TypeString, value)
 		_node.Visible = value
 	}
 	if nodes := mc.mutation.ParentIDs(); len(nodes) > 0 {
@@ -492,12 +492,12 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := mc.mutation.RolesMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   menu.RolesTable,
-			Columns: []string{menu.RolesColumn},
+			Table:   menu.RolesMenusTable,
+			Columns: []string{menu.RolesMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(role_menu.FieldID, field.TypeString),

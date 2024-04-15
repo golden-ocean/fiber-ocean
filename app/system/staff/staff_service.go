@@ -1,8 +1,6 @@
 package staff
 
 import (
-	"context"
-
 	"github.com/golden-ocean/fiber-ocean/app/system/staff_position"
 	"github.com/golden-ocean/fiber-ocean/app/system/staff_role"
 	"github.com/golden-ocean/fiber-ocean/ent"
@@ -31,8 +29,7 @@ func NewService() *Service {
 func (s *Service) Create(r *CreateInput) error {
 	e := &ent.Staff{}
 	_ = copier.Copy(e, r)
-	ctx := context.Background()
-	err := database.WithTx(ctx, s.client, func(tx *ent.Tx) error {
+	err := database.WithTx(s.client, func(tx *ent.Tx) error {
 		// 创建员工
 		re, err := s.staffRepo.Create(e, tx.Client())
 		if err != nil {
@@ -62,20 +59,19 @@ func (s *Service) Update(r *UpdateInput) error {
 	if err != nil {
 		return err
 	}
-	db_p_ids := lo.Map(staff_position_list, func(item *ent.Staff_Position, _ int) string { return item.PositionID })
+	db_p_ids := lo.Map(staff_position_list, func(e *ent.Staff_Position, _ int) string { return e.PositionID })
 	remove_p_ids, add_p_ids := lo.Difference(db_p_ids, r.PositionIDs)
 
 	staff_role_list, err := s.staffRoleRepo.Query(&staff_role.WhereParams{StaffID: r.ID}, s.client)
 	if err != nil {
 		return err
 	}
-	db_r_ids := lo.Map(staff_role_list, func(item *ent.Staff_Role, _ int) string { return item.RoleID })
+	db_r_ids := lo.Map(staff_role_list, func(e *ent.Staff_Role, _ int) string { return e.RoleID })
 	remove_r_ids, add_r_ids := lo.Difference(db_r_ids, r.RoleIDs)
 
 	e := &ent.Staff{}
 	_ = copier.Copy(e, r)
-	ctx := context.Background()
-	err = database.WithTx(ctx, s.client, func(tx *ent.Tx) error {
+	err = database.WithTx(s.client, func(tx *ent.Tx) error {
 		err := s.staffRepo.Update(e, s.client)
 		if err != nil {
 			return err
@@ -106,8 +102,7 @@ func (s *Service) Update(r *UpdateInput) error {
 }
 
 func (s *Service) Delete(r *DeleteInput) error {
-	ctx := context.Background()
-	err := database.WithTx(ctx, s.client, func(tx *ent.Tx) error {
+	err := database.WithTx(s.client, func(tx *ent.Tx) error {
 		// 删除 staff_position 关联
 		if err := s.staffPositionRepo.Delete(&staff_position.DeleteInput{StaffID: r.ID}, s.client); err != nil {
 			return err
@@ -130,9 +125,46 @@ func (s *Service) QueryByUniqueField(w *WhereParams) (*ent.Staff, error) {
 	return e, err
 }
 
+// func (s *Service) QueryPage(w *WhereParams) ([]*StaffOutput, int, error) {
+// 	es, total, err := s.staffRepo.QueryPage(w, s.client)
+// 	output := make([]*StaffOutput, 0)
+// 	_ = copier.Copy(&output, es)
+// 	return output, total, err
+// }
+
 func (s *Service) QueryPage(w *WhereParams) ([]*StaffOutput, int, error) {
 	es, total, err := s.staffRepo.QueryPage(w, s.client)
-	output := make([]*StaffOutput, 0, 10)
+	if err != nil {
+		return nil, 0, err
+	}
+	s_ids := lo.Map(es, func(e *ent.Staff, _ int) string {
+		return e.ID
+	})
+	staffs_positions, err := s.staffPositionRepo.Query(&staff_position.WhereParams{StaffIDs: s_ids}, s.client)
+	if err != nil {
+		return nil, 0, err
+	}
+	staffs_roles, err := s.staffRoleRepo.Query(&staff_role.WhereParams{StaffIDs: s_ids}, s.client)
+	if err != nil {
+		return nil, 0, err
+	}
+	output := make([]*StaffOutput, 0)
 	_ = copier.Copy(&output, es)
+	for _, entity := range output {
+		position_ids := lo.FilterMap(staffs_positions, func(e *ent.Staff_Position, _ int) (string, bool) {
+			if entity.ID == e.StaffID {
+				return e.PositionID, true
+			}
+			return "", false
+		})
+		role_ids := lo.FilterMap(staffs_roles, func(e *ent.Staff_Role, _ int) (string, bool) {
+			if entity.ID == e.StaffID {
+				return e.RoleID, true
+			}
+			return "", false
+		})
+		entity.PositionIDs = position_ids
+		entity.RoleIDs = role_ids
+	}
 	return output, total, err
 }

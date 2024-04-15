@@ -19,13 +19,13 @@ import (
 // MenuQuery is the builder for querying Menu entities.
 type MenuQuery struct {
 	config
-	ctx          *QueryContext
-	order        []menu.OrderOption
-	inters       []Interceptor
-	predicates   []predicate.Menu
-	withParent   *MenuQuery
-	withChildren *MenuQuery
-	withRoles    *RoleMenuQuery
+	ctx            *QueryContext
+	order          []menu.OrderOption
+	inters         []Interceptor
+	predicates     []predicate.Menu
+	withParent     *MenuQuery
+	withChildren   *MenuQuery
+	withRolesMenus *RoleMenuQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -106,8 +106,8 @@ func (mq *MenuQuery) QueryChildren() *MenuQuery {
 	return query
 }
 
-// QueryRoles chains the current query on the "roles" edge.
-func (mq *MenuQuery) QueryRoles() *RoleMenuQuery {
+// QueryRolesMenus chains the current query on the "roles_menus" edge.
+func (mq *MenuQuery) QueryRolesMenus() *RoleMenuQuery {
 	query := (&RoleMenuClient{config: mq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := mq.prepareQuery(ctx); err != nil {
@@ -120,7 +120,7 @@ func (mq *MenuQuery) QueryRoles() *RoleMenuQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(menu.Table, menu.FieldID, selector),
 			sqlgraph.To(role_menu.Table, role_menu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, menu.RolesTable, menu.RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, menu.RolesMenusTable, menu.RolesMenusColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
 		return fromU, nil
@@ -315,14 +315,14 @@ func (mq *MenuQuery) Clone() *MenuQuery {
 		return nil
 	}
 	return &MenuQuery{
-		config:       mq.config,
-		ctx:          mq.ctx.Clone(),
-		order:        append([]menu.OrderOption{}, mq.order...),
-		inters:       append([]Interceptor{}, mq.inters...),
-		predicates:   append([]predicate.Menu{}, mq.predicates...),
-		withParent:   mq.withParent.Clone(),
-		withChildren: mq.withChildren.Clone(),
-		withRoles:    mq.withRoles.Clone(),
+		config:         mq.config,
+		ctx:            mq.ctx.Clone(),
+		order:          append([]menu.OrderOption{}, mq.order...),
+		inters:         append([]Interceptor{}, mq.inters...),
+		predicates:     append([]predicate.Menu{}, mq.predicates...),
+		withParent:     mq.withParent.Clone(),
+		withChildren:   mq.withChildren.Clone(),
+		withRolesMenus: mq.withRolesMenus.Clone(),
 		// clone intermediate query.
 		sql:  mq.sql.Clone(),
 		path: mq.path,
@@ -351,14 +351,14 @@ func (mq *MenuQuery) WithChildren(opts ...func(*MenuQuery)) *MenuQuery {
 	return mq
 }
 
-// WithRoles tells the query-builder to eager-load the nodes that are connected to
-// the "roles" edge. The optional arguments are used to configure the query builder of the edge.
-func (mq *MenuQuery) WithRoles(opts ...func(*RoleMenuQuery)) *MenuQuery {
+// WithRolesMenus tells the query-builder to eager-load the nodes that are connected to
+// the "roles_menus" edge. The optional arguments are used to configure the query builder of the edge.
+func (mq *MenuQuery) WithRolesMenus(opts ...func(*RoleMenuQuery)) *MenuQuery {
 	query := (&RoleMenuClient{config: mq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	mq.withRoles = query
+	mq.withRolesMenus = query
 	return mq
 }
 
@@ -443,7 +443,7 @@ func (mq *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 		loadedTypes = [3]bool{
 			mq.withParent != nil,
 			mq.withChildren != nil,
-			mq.withRoles != nil,
+			mq.withRolesMenus != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -477,10 +477,10 @@ func (mq *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 			return nil, err
 		}
 	}
-	if query := mq.withRoles; query != nil {
-		if err := mq.loadRoles(ctx, query, nodes,
-			func(n *Menu) { n.Edges.Roles = []*Role_Menu{} },
-			func(n *Menu, e *Role_Menu) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+	if query := mq.withRolesMenus; query != nil {
+		if err := mq.loadRolesMenus(ctx, query, nodes,
+			func(n *Menu) { n.Edges.RolesMenus = []*Role_Menu{} },
+			func(n *Menu, e *Role_Menu) { n.Edges.RolesMenus = append(n.Edges.RolesMenus, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -546,7 +546,7 @@ func (mq *MenuQuery) loadChildren(ctx context.Context, query *MenuQuery, nodes [
 	}
 	return nil
 }
-func (mq *MenuQuery) loadRoles(ctx context.Context, query *RoleMenuQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Role_Menu)) error {
+func (mq *MenuQuery) loadRolesMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Role_Menu)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Menu)
 	for i := range nodes {
@@ -560,7 +560,7 @@ func (mq *MenuQuery) loadRoles(ctx context.Context, query *RoleMenuQuery, nodes 
 		query.ctx.AppendFieldOnce(role_menu.FieldMenuID)
 	}
 	query.Where(predicate.Role_Menu(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(menu.RolesColumn), fks...))
+		s.Where(sql.InValues(s.C(menu.RolesMenusColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

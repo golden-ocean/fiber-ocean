@@ -38,8 +38,8 @@ func (Staff) Edges() []ent.Edge {
 		edge.To("organization", Organization.Type).
 			Field("organization_id").
 			Unique(),
-		edge.To("roles", Staff_Role.Type),
-		edge.To("positions", Staff_Position.Type),
+		edge.To("staffs_roles", Staff_Role.Type),
+		edge.To("staffs_positions", Staff_Position.Type),
 	}
 }
 

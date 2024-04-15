@@ -139,7 +139,7 @@ func Method(v string) predicate.Menu {
 }
 
 // Visible applies equality check predicate on the "visible" field. It's identical to VisibleEQ.
-func Visible(v bool) predicate.Menu {
+func Visible(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldVisible, v))
 }
 
@@ -1164,13 +1164,58 @@ func MethodContainsFold(v string) predicate.Menu {
 }
 
 // VisibleEQ applies the EQ predicate on the "visible" field.
-func VisibleEQ(v bool) predicate.Menu {
+func VisibleEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldVisible, v))
 }
 
 // VisibleNEQ applies the NEQ predicate on the "visible" field.
-func VisibleNEQ(v bool) predicate.Menu {
+func VisibleNEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldVisible, v))
+}
+
+// VisibleIn applies the In predicate on the "visible" field.
+func VisibleIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldVisible, vs...))
+}
+
+// VisibleNotIn applies the NotIn predicate on the "visible" field.
+func VisibleNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldVisible, vs...))
+}
+
+// VisibleGT applies the GT predicate on the "visible" field.
+func VisibleGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldVisible, v))
+}
+
+// VisibleGTE applies the GTE predicate on the "visible" field.
+func VisibleGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldVisible, v))
+}
+
+// VisibleLT applies the LT predicate on the "visible" field.
+func VisibleLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldVisible, v))
+}
+
+// VisibleLTE applies the LTE predicate on the "visible" field.
+func VisibleLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldVisible, v))
+}
+
+// VisibleContains applies the Contains predicate on the "visible" field.
+func VisibleContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldVisible, v))
+}
+
+// VisibleHasPrefix applies the HasPrefix predicate on the "visible" field.
+func VisibleHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldVisible, v))
+}
+
+// VisibleHasSuffix applies the HasSuffix predicate on the "visible" field.
+func VisibleHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldVisible, v))
 }
 
 // VisibleIsNil applies the IsNil predicate on the "visible" field.
@@ -1181,6 +1226,16 @@ func VisibleIsNil() predicate.Menu {
 // VisibleNotNil applies the NotNil predicate on the "visible" field.
 func VisibleNotNil() predicate.Menu {
 	return predicate.Menu(sql.FieldNotNull(FieldVisible))
+}
+
+// VisibleEqualFold applies the EqualFold predicate on the "visible" field.
+func VisibleEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldVisible, v))
+}
+
+// VisibleContainsFold applies the ContainsFold predicate on the "visible" field.
+func VisibleContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldVisible, v))
 }
 
 // HasParent applies the HasEdge predicate on the "parent" edge.
@@ -1229,21 +1284,21 @@ func HasChildrenWith(preds ...predicate.Menu) predicate.Menu {
 	})
 }
 
-// HasRoles applies the HasEdge predicate on the "roles" edge.
-func HasRoles() predicate.Menu {
+// HasRolesMenus applies the HasEdge predicate on the "roles_menus" edge.
+func HasRolesMenus() predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, RolesTable, RolesColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, RolesMenusTable, RolesMenusColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasRolesWith applies the HasEdge predicate on the "roles" edge with a given conditions (other predicates).
-func HasRolesWith(preds ...predicate.Role_Menu) predicate.Menu {
+// HasRolesMenusWith applies the HasEdge predicate on the "roles_menus" edge with a given conditions (other predicates).
+func HasRolesMenusWith(preds ...predicate.Role_Menu) predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
-		step := newRolesStep()
+		step := newRolesMenusStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
