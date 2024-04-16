@@ -122,11 +122,11 @@ func (r *Repository) QueryPage(w *WhereParams, c *ent.Client) ([]*ent.Dictionary
 		return nil, 0, err
 	}
 	b.Select(SelectFields...)
-	entities, err := b.Order(dictionary_item.BySort()).
+	es, err := b.Order(dictionary_item.BySort()).
 		Limit(w.PageSize).
 		Offset((w.Current - 1) * w.PageSize).
 		All(r.ctx)
-	return entities, total, err
+	return es, total, err
 }
 
 func (r *Repository) QueryByCode(code string, c *ent.Client) ([]*ent.Dictionary_Item, error) {

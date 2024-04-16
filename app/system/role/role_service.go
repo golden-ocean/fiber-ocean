@@ -3,6 +3,7 @@ package role
 import (
 	"errors"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/golden-ocean/fiber-ocean/app/system/role_menu"
 	"github.com/golden-ocean/fiber-ocean/app/system/staff_role"
 	"github.com/golden-ocean/fiber-ocean/ent"
@@ -13,18 +14,20 @@ import (
 )
 
 type Service struct {
-	client        *ent.Client
-	roleRepo      *Repository
-	staffRoleRepo *staff_role.Repository
-	roleMenuRepo  *role_menu.Repository
+	client         *ent.Client
+	roleRepo       *Repository
+	staffRoleRepo  *staff_role.Repository
+	roleMenuRepo   *role_menu.Repository
+	casbinEnforcer *casbin.Enforcer
 }
 
 func NewService() *Service {
 	return &Service{
-		client:        global.Client,
-		roleRepo:      NewRepository(),
-		staffRoleRepo: staff_role.NewRepository(),
-		roleMenuRepo:  role_menu.NewRepository(),
+		client:         global.Client,
+		roleRepo:       NewRepository(),
+		staffRoleRepo:  staff_role.NewRepository(),
+		roleMenuRepo:   role_menu.NewRepository(),
+		casbinEnforcer: global.Enforcer,
 	}
 }
 
@@ -53,6 +56,9 @@ func (s *Service) Delete(r *DeleteInput) error {
 	}
 	e := &ent.Role{ID: r.ID}
 	err := s.roleRepo.Delete(e, s.client)
+	if err == nil {
+		s.casbinEnforcer.LoadPolicy()
+	}
 	return err
 }
 
@@ -64,7 +70,7 @@ func (s *Service) QueryPage(w *WhereParams) ([]*RoleOutput, int, error) {
 }
 
 func (s *Service) QueryAll(w *WhereParams) ([]*RoleOutput, error) {
-	es, err := s.roleRepo.QueryAll(w, s.client)
+	es, err := s.roleRepo.Query(w, s.client)
 	output := make([]*RoleOutput, 0, 10)
 	_ = copier.Copy(&output, es)
 	return output, err
@@ -95,5 +101,8 @@ func (s *Service) GrantMenus(r *RoleMenuInput) error {
 		}
 		return nil
 	})
+	if err == nil {
+		s.casbinEnforcer.LoadPolicy()
+	}
 	return err
 }

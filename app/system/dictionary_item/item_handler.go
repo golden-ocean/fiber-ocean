@@ -57,9 +57,9 @@ func (h *Handler) QueryPage(c fiber.Ctx) error {
 	if err := c.Bind().Query(w); err != nil {
 		return err
 	}
-	entities, total, err := h.service.QueryPage(w)
+	es, total, err := h.service.QueryPage(w)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.Page(entities, w.Current, w.PageSize, total))
+	return c.JSON(response.Page(es, w.Current, w.PageSize, total))
 }

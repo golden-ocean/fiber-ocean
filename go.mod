@@ -10,16 +10,13 @@ require (
 )
 
 require (
-	aidanwoods.dev/go-paseto v1.5.1 // indirect
-	aidanwoods.dev/go-result v0.1.0 // indirect
 	ariga.io/atlas v0.21.1 // indirect
-	github.com/MicahParks/jwkset v0.5.17 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb // indirect
 	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
-	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
+	github.com/casbin/govaluate v1.1.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-openapi/inflect v0.21.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
@@ -32,22 +29,21 @@ require (
 	github.com/zclconf/go-cty v1.14.4 // indirect
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.20.0 // indirect
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/MicahParks/keyfunc/v2 v2.1.0
-	github.com/MicahParks/keyfunc/v3 v3.3.2
 	github.com/andybalholm/brotli v1.1.0 // indirect
+	github.com/casbin/casbin/v2 v2.87.1
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gofiber/fiber/v3 v3.0.0-beta.2
 	github.com/gofiber/utils/v2 v2.0.0-beta.4 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/google/uuid v1.6.0 // indirect
+	github.com/google/uuid v1.6.0
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/copier v0.4.0
 	github.com/klauspost/compress v1.17.8 // indirect
@@ -69,7 +65,6 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.52.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.22.0
 	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8 // indirect

@@ -57,11 +57,11 @@ func (h *Handler) QueryPage(c fiber.Ctx) error {
 	if err := c.Bind().Query(w); err != nil {
 		return err
 	}
-	entities, total, err := h.service.QueryPage(w)
+	es, total, err := h.service.QueryPage(w)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.Page(entities, w.Current, w.PageSize, total))
+	return c.JSON(response.Page(es, w.Current, w.PageSize, total))
 }
 
 func (h *Handler) QueryAll(c fiber.Ctx) error {
@@ -69,20 +69,20 @@ func (h *Handler) QueryAll(c fiber.Ctx) error {
 	if err := c.Bind().Query(w); err != nil {
 		return err
 	}
-	entities, err := h.service.QueryAll(w)
+	es, err := h.service.QueryAll(w)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.OK(entities))
+	return c.JSON(response.OK(es))
 }
 
 func (h *Handler) QueryMenus(c fiber.Ctx) error {
 	id := c.Params("role_id")
-	entities, err := h.service.QueryMenus(id)
+	es, err := h.service.QueryMenus(id)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.OK(entities))
+	return c.JSON(response.OK(es))
 }
 
 func (h *Handler) GrantMenus(c fiber.Ctx) error {

@@ -57,18 +57,18 @@ func (h *Handler) QueryPage(c fiber.Ctx) error {
 	if err := c.Bind().Query(w); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	entities, total, err := h.service.QueryPage(w)
+	es, total, err := h.service.QueryPage(w)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.Page(entities, w.Current, w.PageSize, total))
+	return c.JSON(response.Page(es, w.Current, w.PageSize, total))
 }
 
 func (h *Handler) QueryByCode(c fiber.Ctx) error {
 	code := c.Params("code", "system_status")
-	entities, err := h.service.QueryByCode(code)
+	es, err := h.service.QueryByCode(code)
 	if err != nil {
 		return err
 	}
-	return c.JSON(response.OK(entities))
+	return c.JSON(response.OK(es))
 }

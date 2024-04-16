@@ -1,6 +1,7 @@
 package staff
 
 import (
+	"github.com/casbin/casbin/v2"
 	"github.com/golden-ocean/fiber-ocean/app/system/staff_position"
 	"github.com/golden-ocean/fiber-ocean/app/system/staff_role"
 	"github.com/golden-ocean/fiber-ocean/ent"
@@ -15,6 +16,7 @@ type Service struct {
 	staffRepo         *Repository
 	staffPositionRepo *staff_position.Repository
 	staffRoleRepo     *staff_role.Repository
+	casbinEnforcer    *casbin.Enforcer
 }
 
 func NewService() *Service {
@@ -23,6 +25,7 @@ func NewService() *Service {
 		staffRepo:         NewRepository(),
 		staffPositionRepo: staff_position.NewRepository(),
 		staffRoleRepo:     staff_role.NewRepository(),
+		casbinEnforcer:    global.Enforcer,
 	}
 }
 
@@ -98,6 +101,9 @@ func (s *Service) Update(r *UpdateInput) error {
 		}
 		return nil
 	})
+	if err == nil {
+		s.casbinEnforcer.LoadPolicy()
+	}
 	return err
 }
 
@@ -117,6 +123,9 @@ func (s *Service) Delete(r *DeleteInput) error {
 		}
 		return nil
 	})
+	if err == nil {
+		s.casbinEnforcer.LoadPolicy()
+	}
 	return err
 }
 

@@ -31,7 +31,7 @@ func (s *Service) Create(r *CreateInput) error {
 }
 
 func (s *Service) Update(r *UpdateInput) error {
-	all, err := s.menuRepo.QueryAll(&WhereParams{}, s.client)
+	all, err := s.menuRepo.Query(&WhereParams{}, s.client)
 	if err != nil {
 		return err
 	}
@@ -55,9 +55,9 @@ func (s *Service) Delete(r *DeleteInput) error {
 }
 
 func (s *Service) QueryTree(w *WhereParams) ([]*MenuOutput, error) {
-	entities, err := s.menuRepo.QueryAll(w, s.client)
+	es, err := s.menuRepo.Query(w, s.client)
 	output := make([]*MenuOutput, 0)
-	_ = copier.Copy(&output, entities)
+	_ = copier.Copy(&output, es)
 	tree := s.buildTree(output)
 	return tree, err
 }

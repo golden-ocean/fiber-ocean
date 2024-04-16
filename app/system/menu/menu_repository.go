@@ -113,7 +113,7 @@ func (r *Repository) Exist(w *WhereParams, c *ent.Client) (bool, error) {
 	return exist, err
 }
 
-func (r *Repository) QueryAll(w *WhereParams, c *ent.Client) ([]*ent.Menu, error) {
+func (r *Repository) Query(w *WhereParams, c *ent.Client) ([]*ent.Menu, error) {
 	b := c.Menu.Query()
 	if len(strings.TrimSpace(w.Name)) > 0 {
 		b = b.Where(menu.NameContains(strings.TrimSpace(w.Name)))

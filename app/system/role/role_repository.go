@@ -112,7 +112,7 @@ func (r *Repository) QueryPage(w *WhereParams, c *ent.Client) ([]*ent.Role, int,
 	return es, total, err
 }
 
-func (r *Repository) QueryAll(w *WhereParams, c *ent.Client) ([]*ent.Role, error) {
+func (r *Repository) Query(w *WhereParams, c *ent.Client) ([]*ent.Role, error) {
 	b := c.Role.Query()
 	if len(strings.TrimSpace(w.Name)) > 0 {
 		b = b.Where(role.NameContains(strings.TrimSpace(w.Name)))

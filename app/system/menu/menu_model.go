@@ -36,12 +36,13 @@ type DeleteInput struct {
 }
 
 type WhereParams struct {
-	Name     string `zh:"菜单名称" query:"name" json:"name" validate:"omitempty,max=32"`
-	ParentID string `zh:"父级菜单" query:"parent_id" json:"parent_id" validate:"omitempty"`
-	Status   string `zh:"状态" query:"status" json:"status" validate:"omitempty,oneof=Disable Enable"`
-	Remark   string `zh:"备注" query:"remark" json:"remark" validate:"omitempty,max=128"`
-	PageSize uint64 `zh:"分页数量" query:"pageSize" json:"pageSize" validate:"omitempty,number,gt=0,max=50"`
-	Current  uint64 `zh:"页数" query:"current" json:"current" validate:"omitempty,number,gt=0"`
+	Name     string   `zh:"菜单名称" query:"name" json:"name" validate:"omitempty,max=32"`
+	ParentID string   `zh:"父级菜单" query:"parent_id" json:"parent_id" validate:"omitempty"`
+	Status   string   `zh:"状态" query:"status" json:"status" validate:"omitempty,oneof=Disable Enable"`
+	Remark   string   `zh:"备注" query:"remark" json:"remark" validate:"omitempty,max=128"`
+	PageSize uint64   `zh:"分页数量" query:"pageSize" json:"pageSize" validate:"omitempty,number,gt=0,max=50"`
+	Current  uint64   `zh:"页数" query:"current" json:"current" validate:"omitempty,number,gt=0"`
+	IDs      []string `zh:"ID列表" json:"ids" validate:"omitempty"`
 }
 
 type MenuOutput struct {
