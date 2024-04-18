@@ -7,7 +7,7 @@ const (
 
 const (
 	SystemStatus    = "system_status"
-	TreeRoot        = "Root"
+	TreeRoot        = "00000000000000000000"
 	SuperAdminId    = "Root"
 	DeletedFlag     = "deleted_at"
 	DeletedValue    = 0

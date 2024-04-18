@@ -16,7 +16,7 @@ require (
 	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
-	github.com/casbin/govaluate v1.1.0 // indirect
+	github.com/casbin/govaluate v1.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-openapi/inflect v0.21.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect

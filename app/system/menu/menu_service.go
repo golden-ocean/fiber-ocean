@@ -98,7 +98,7 @@ func (s *Service) buildTree(menus []*MenuOutput) []*MenuOutput {
 	// 寻找根组织并返回
 	var roots []*MenuOutput
 	for _, m := range menus {
-		if len(m.ParentID) == 0 {
+		if m.ParentID == constants.TreeRoot {
 			roots = append(roots, m)
 		}
 	}
@@ -114,7 +114,7 @@ func (s *Service) isValidParentID(id, parentID string, menus []*ent.Menu) bool {
 	for _, m := range menus {
 		menuMap[m.ID] = m
 	}
-	for len(parentID) > 0 {
+	for parentID != constants.TreeRoot {
 		if _, ok := ancestors[parentID]; ok {
 			return false
 		}
